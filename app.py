@@ -5,6 +5,7 @@ from database import DBSession
 #IQAC
 from IQAC.iqac import iqac_bp
 from IQAC.iqac_change_password import iqac_change_password_bp
+from IQAC.allot_criterion import allot_criterion_bp
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -20,6 +21,7 @@ dbsession = DBSession()
 #IQAC
 app.register_blueprint(iqac_bp)
 app.register_blueprint(iqac_change_password_bp)
+app.register_blueprint(allot_criterion_bp)
 
 @app.route('/')
 def home():
