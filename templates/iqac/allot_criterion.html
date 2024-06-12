@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>IQAC Allot Criterion | VibhuARMS</title>
+    <title>IQAC Allot Criteria | VibhuARMS</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
     <link href="/static/styles.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
@@ -15,12 +15,36 @@
 <body class="sb-nav-fixed">
     {% include 'iqac/navbar.html' %}
     <div class="container-fluid px-4"><br><br>
-        <h3 class="mt-4">Allot Criterion</h3><hr />
+        <h3 class="mt-4">Allot Criteria</h3><hr />
         <div class="row justify-content-center">
             <div class="col-lg-5">
                 <div class="card">
                     <div class="card-body">
-                        
+                        <form>
+                            <div class="form-floating mb-3">
+                                <select class="form-control" id="criterion_name" name="criterion_name" required>
+                                    <option value="" disabled selected>Select Criterion</option>
+                                    {% for criterion in Criterion_Details %}
+                                        <option value="{{ criterion.name }}">{{ criterion.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="Criterion">Criterion Name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select class="form-control" id="criteria" name="criteria" required>
+                                    <option value="" disabled selected>Select Criteria ID</option>
+                                    <option value="criteria1">Criteria 1</option>
+                                    <option value="criteria2">Criteria 2</option>
+                                    <option value="criteria3">Criteria 3</option>
+                                    <option value="criteria4">Criteria 4</option>
+                                    <option value="criteria5">Criteria 5</option>
+                                    <option value="criteria6">Criteria 6</option>
+                                    <option value="criteria7">Criteria 7</option>
+                                </select>
+                                <label for="criteria">Criteria ID</label>
+                            </div>
+                            <center><button type="submit" class="btn btn-primary">Submit</button></center>
+                        </form>
                     </div>
                 </div>
             </div>

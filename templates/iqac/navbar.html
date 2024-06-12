@@ -30,35 +30,39 @@
 <!-- Offcanvas Sidebar -->
 <div class="offcanvas offcanvas-start bg-blue" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <nav class="sb-sidenav accordion" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="sidebarLabel"></h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <center><img src="/static/assets/img/vibhu-1.png" alt="product" class="img-responsive " height="100px" width="100px"><br><br></center>
-                    <a class="nav-link" href="{{ url_for('iqac.iqac_dashboard') }}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-sign-in-alt"></i></div>
-                        Dashboard
-                    </a> 
-
-                    <a class="nav-link" href="{{ url_for('allot_criterion.allot_criterion') }}">
-                        <div class="sb-nav-link-icon"><i class="fa fa-user"></i></div>
-                        Allot Criterion
-                    </a>
-                                        
-                    <a class="nav-link" href="{{ url_for('iqac_change_password.iqac_change_password') }}">
-                        <div class="sb-nav-link-icon"><i class="fa fa-key"></i></div>
-                        Change Password
-                    </a>
-    
-                    <a class="nav-link" href="{{ url_for('iqac.logout') }}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
-                        Signout
-                    </a>
+    <nav class="sb-sidenav accordion" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="sidebarLabel"></h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
+                <center><img src="/static/assets/img/vibhu-1.png" alt="product" class="img-responsive" height="100px" width="100px"><br><br></center>
+                <a class="nav-link" href="{{ url_for('iqac.iqac_dashboard') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-sign-in-alt"></i></div>
+                    Dashboard
+                </a> 
+
+                <a class="nav-link" href="{{ url_for('allot_criterion.allot_criterion') }}">
+                    <div class="sb-nav-link-icon"><i class="fa fa-user"></i></div>
+                    Allot Criterion
+                </a>
+                                    
+                <a class="nav-link" href="{{ url_for('iqac_change_password.iqac_change_password') }}">
+                    <div class="sb-nav-link-icon"><i class="fa fa-key"></i></div>
+                    Change Password
+                </a>
+
+                <a class="nav-link" href="{{ url_for('import_criteria.import_criteria') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-upload"></i></div>
+                    Import Criteria
+                </a>
+                
+                <a class="nav-link" href="{{ url_for('iqac.logout') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
+                    Signout
+                </a>
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
 </div>
