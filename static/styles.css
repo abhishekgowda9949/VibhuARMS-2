@@ -11829,10 +11829,10 @@ body {
 .iqac-bg {
   background-color: rgba(144, 238, 144, 0.2); /* Light green with 20% opacity */
 }
-.criterian-bg {
+.attributer-bg {
     background-color: rgba(128, 0, 128, 0.2);
 }
-.key-bg {
+.user-bg {
     background-color: rgba(128, 128, 0, 0.2);
 }
 @media (max-width: 600px) {

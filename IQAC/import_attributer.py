@@ -2,12 +2,12 @@ import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import pandas as pd
-from database import CRITERIA_CO, DBSession
+from database import ATTRIBUTE_CO, DBSession
 
-import_criteria_bp = Blueprint('import_criteria', __name__)
+import_attributer_bp = Blueprint('import_attributer', __name__)
 
-@import_criteria_bp.route('/import_criteria', methods=['GET', 'POST'])
-def import_criteria():
+@import_attributer_bp.route('/import_attributer', methods=['GET', 'POST'])
+def import_attributer():
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('No file part')
@@ -29,20 +29,20 @@ def import_criteria():
             dbsession = DBSession()
             
             for index, row in df.iterrows():
-                new_criterion = CRITERIA_CO(
+                new_attributer = ATTRIBUTE_CO(
                     name=row['name'],
                     emailid=row['emailid'],
                     password=row['password']
                 )
                 
-                dbsession.add(new_criterion)
+                dbsession.add(new_attributer)
             
             dbsession.commit()
             dbsession.close()
             
-            return render_template('iqac/dashboard.html' , messages ="CriteriOn Users Successfully Imported")
+            return render_template('iqac/dashboard.html' , messages ="Attribute Users Successfully Imported")
     
-    return render_template('iqac/import_criterion.html')
+    return render_template('iqac/import_attributer.html')
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'xls', 'xlsx'}

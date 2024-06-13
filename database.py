@@ -23,19 +23,12 @@ class IQAC_C0(Base):
     password = Column(String(255))
 
 # Define a model for the Admin table
-class CRITERIA_CO(Base):
-    __tablename__ = 'criteria_co'
+class ATTRIBUTE_CO(Base):
+    __tablename__ = 'attributer_co'
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
     emailid = Column(String(255), unique=True)
     password = Column(String(255))
-
-class KEY_CO(Base):
-    __tablename__ = 'keey_co'
-    id = Column(Integer, primary_key=True)
-    name = Column(VARCHAR(255))
-    emailid = Column(VARCHAR(255))
-    password = Column(VARCHAR(255))
 
 # Create the table if it doesn't exist
 Base.metadata.create_all(engine)

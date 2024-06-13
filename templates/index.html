@@ -37,8 +37,8 @@
         
         <div class="tabs-container">
             <button class="tab-button" id="iqaclogin">IQAC</button>
-            <button class="tab-button" id="criterianlogin">CRITERIAN</button>
-            <button class="tab-button" id="keylogin">KEY</button>
+            <button class="tab-button" id="attributerlogin">ATTRIBUTER</button>
+            <button class="tab-button" id="userlogin">USER</button>
         </div>
 
         <div class="form-container iqac-container">
@@ -56,32 +56,32 @@
         </div>
 
 
-        <div class="form-container criterian-container">
-            <form method="POST" action="/criterian_dashboard">
+        <div class="form-container attributer-container">
+            <form method="POST" action="/attributer_dashboard">
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="email" name="criterianemail" placeholder="Criterian Email" required />
-                    <label for="uemail">Criterian Email</label>
+                    <input class="form-control" type="email" name="attributeremail" placeholder="attributer Email" required />
+                    <label for="aemail">Attributer Email</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="password" name="criterianpassword" placeholder="Password" required />
+                    <input class="form-control" type="password" name="attributerpassword" placeholder="Password" required />
                     <label for="password">Password</label>
                 </div>
-                <button type="submit" class="btn btn-primary">Criterian Sign In</button>
+                <button type="submit" class="btn btn-primary">Attributer Sign In</button>
             </form>
         </div>
         
 
-        <div class="form-container key-container">
-            <form method="POST" action="/key_dashboard">
+        <div class="form-container user-container">
+            <form method="POST" action="/user_dashboard">
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="email" name="keyemail" placeholder="Key Email" required />
-                    <label for="vemail">Key Email</label>
+                    <input class="form-control" type="email" name="useremail" placeholder="user Email" required />
+                    <label for="uemail">User Email</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="password" name="keypassword" placeholder="Password" required />
+                    <input class="form-control" type="password" name="userpassword" placeholder="Password" required />
                     <label for="password">Password</label>
                 </div>
-                <button type="submit" class="btn btn-primary">Key Sign In</button>
+                <button type="submit" class="btn btn-primary">User Sign In</button>
             </form>
         </div>
        
@@ -91,50 +91,50 @@
     <script>
         const container = document.getElementById('container');
         const iqacloginBtn = document.getElementById('iqaclogin');
-        const criterianloginBtn = document.getElementById('criterianlogin');
-        const keyloginBtn = document.getElementById('keylogin');
+        const attributerloginBtn = document.getElementById('attributerlogin');
+        const userloginBtn = document.getElementById('userlogin');
 
         const iqacContainer = document.querySelector('.iqac-container');
-        const criterianContainer = document.querySelector('.criterian-container');
-        const keyContainer = document.querySelector('.key-container');
+        const attributerContainer = document.querySelector('.attributer-container');
+        const userContainer = document.querySelector('.user-container');
 
         iqacloginBtn.addEventListener('click', () => {
             iqacContainer.classList.add('active');
-            criterianContainer.classList.remove('active');
-            keyContainer.classList.remove('active');
+            attributerContainer.classList.remove('active');
+            userContainer.classList.remove('active');
             container.classList.add('iqac-bg');
-            container.classList.remove('criterian-bg');
-            container.classList.remove('key-bg');
+            container.classList.remove('attributer-bg');
+            container.classList.remove('user-bg');
             // Activate tab button
             iqacloginBtn.classList.add('active');
-            criterianloginBtn.classList.remove('active');
-            keyloginBtn.classList.remove('active');
+            attributerloginBtn.classList.remove('active');
+            userloginBtn.classList.remove('active');
         });
 
-        criterianloginBtn.addEventListener('click', () => {
-            criterianContainer.classList.add('active');
+        attributerloginBtn.addEventListener('click', () => {
+            attributerContainer.classList.add('active');
             iqacContainer.classList.remove('active');
-            keyContainer.classList.remove('active');
-            container.classList.add('criterian-bg');
+            userContainer.classList.remove('active');
+            container.classList.add('attributer-bg');
             container.classList.remove('iqac-bg');
-            container.classList.remove('key-bg');
+            container.classList.remove('user-bg');
             // Activate tab button
-            criterianloginBtn.classList.add('active');
+            attributerloginBtn.classList.add('active');
             iqacloginBtn.classList.remove('active');
-            keyloginBtn.classList.remove('active');
+            userloginBtn.classList.remove('active');
         });
 
-        keyloginBtn.addEventListener('click', () => {
-            keyContainer.classList.add('active');
+        userloginBtn.addEventListener('click', () => {
+            userContainer.classList.add('active');
             iqacContainer.classList.remove('active');
-            criterianContainer.classList.remove('active');
-            container.classList.add('key-bg');
+            attributerContainer.classList.remove('active');
+            container.classList.add('user-bg');
             container.classList.remove('iqac-bg');
-            container.classList.remove('usecriterian-bg');
+            container.classList.remove('attributer-bg');
             // Activate tab button
-            keyloginBtn.classList.add('active');
+            userloginBtn.classList.add('active');
             iqacloginBtn.classList.remove('active');
-            criterianloginBtn.classList.remove('active');
+            attributerloginBtn.classList.remove('active');
         });
     </script>
 </body>
