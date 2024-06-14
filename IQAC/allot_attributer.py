@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, render_template, request
-from database import ATTRIBUTE_CO, DBSession
+from database import ATTRIBUTE_ALLOT, ATTRIBUTE_CO, DBSession
 
 allot_attributer_bp = Blueprint('allot_attributer', __name__)
 
@@ -31,3 +31,21 @@ def get_attributer_details():
         })
     else:
         return jsonify({'error': 'Attributer not found'}), 404
+    
+@allot_attributer_bp.route('/submit_allot_attribute', methods=['POST'])
+def submit_allot_attribute():
+    attributer_name = request.form['attributer_name']
+    attributer_email = request.form['attributer_email']
+    attributer_id = request.form['attributer_id']
+    attribute_id = request.form['attribute']
+
+    # Create an instance of the SQLAlchemy model
+    new_entry = ATTRIBUTE_ALLOT(name=attributer_name, emailid=attributer_email, attributerid=attributer_id, attributeid=attribute_id)
+
+    # Add to session and commit to save to database
+    dbsession=DBSession()
+    dbsession.add(new_entry)
+    dbsession.commit()
+    dbsession.close()
+
+    return render_template('iqac/dashboard.html' , messages ="Attribute Assigned Successfully")

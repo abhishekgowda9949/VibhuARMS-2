@@ -20,7 +20,7 @@
             <div class="col-lg-5">
                 <div class="card">
                     <div class="card-body">
-                        <form id="allot-form">
+                        <form id="allot-form" action="/submit_allot_attribute" method="POST">
                             <div class="form-floating mb-3">
                                 <select class="form-control" id="attributer_name" name="attributer_name" required>
                                     <option value="" disabled selected>Select Attributer</option>
@@ -32,27 +32,27 @@
                             </div>
                             <div id="attributer-details" style="display: none;">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="attributer_email" readonly>
+                                    <input type="text" class="form-control" id="attributer_email" name="attributer_email" readonly>
                                     <label for="attributer_email">Email ID</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="attributer_id" readonly>
+                                    <input type="text" class="form-control" id="attributer_id" name="attributer_id" readonly>
                                     <label for="attributer_id">Attributer ID</label>
                                 </div>
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-control" id="attribute" name="attribute" required>
                                     <option value="" disabled selected>Select Attribute ID</option>
-                                    <option value="attribute1">Attribute 1</option>
-                                    <option value="attribute2">Attribute 2</option>
-                                    <option value="attribute3">Attribute 3</option>
-                                    <option value="attribute4">Attribute 4</option>
-                                    <option value="attribute5">Attribute 5</option>
-                                    <option value="attribute6">Attribute 6</option>
-                                    <option value="attribute7">Attribute 7</option>
-                                    <option value="attribute8">Attribute 8</option>
-                                    <option value="attribute9">Attribute 9</option>
-                                    <option value="attribute10">Attribute 10</option>
+                                    <option value="Attribute 1">Attribute 1</option>
+                                    <option value="Attribute 2">Attribute 2</option>
+                                    <option value="Attribute 3">Attribute 3</option>
+                                    <option value="Attribute 4">Attribute 4</option>
+                                    <option value="Attribute 5">Attribute 5</option>
+                                    <option value="Attribute 6">Attribute 6</option>
+                                    <option value="Attribute 7">Attribute 7</option>
+                                    <option value="Attribute 8">Attribute 8</option>
+                                    <option value="Attribute 9">Attribute 9</option>
+                                    <option value="Attribute 10">Attribute 10</option>
                                 </select>
                                 <label for="attribute">Attribute ID</label>
                             </div>
