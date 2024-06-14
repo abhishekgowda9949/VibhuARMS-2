@@ -30,6 +30,7 @@ def import_attributer():
             
             for index, row in df.iterrows():
                 new_attributer = ATTRIBUTE_CO(
+                    attributerid=row['attributerid'],
                     name=row['name'],
                     emailid=row['emailid'],
                     password=row['password']

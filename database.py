@@ -26,6 +26,7 @@ class IQAC_C0(Base):
 class ATTRIBUTE_CO(Base):
     __tablename__ = 'attributer_co'
     id = Column(Integer, primary_key=True)
+    attributerid = Column(VARCHAR(255), primary_key=True)
     name = Column(String(255))
     emailid = Column(String(255), unique=True)
     password = Column(String(255))

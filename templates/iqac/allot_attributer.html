@@ -20,7 +20,7 @@
             <div class="col-lg-5">
                 <div class="card">
                     <div class="card-body">
-                        <form>
+                        <form id="allot-form">
                             <div class="form-floating mb-3">
                                 <select class="form-control" id="attributer_name" name="attributer_name" required>
                                     <option value="" disabled selected>Select Attributer</option>
@@ -29,6 +29,16 @@
                                     {% endfor %}
                                 </select>
                                 <label for="Attribute_name">Attribute Name</label>
+                            </div>
+                            <div id="attributer-details" style="display: none;">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="attributer_email" readonly>
+                                    <label for="attributer_email">Email ID</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="attributer_id" readonly>
+                                    <label for="attributer_id">Attributer ID</label>
+                                </div>
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-control" id="attribute" name="attribute" required>
@@ -58,5 +68,28 @@
     <script src="assets/demo/chart-area-demo.js"></script>
     <script src="assets/demo/chart-bar-demo.js"></script>
     <script src="js/datatables-simple-demo.js"></script>
+    <script>
+        document.getElementById('attributer_name').addEventListener('change', function() {
+            var attributerName = this.value;
+            if (attributerName) {
+                fetch('/get_attributer_details', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: attributerName })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('attributer_email').value = data.emailid;
+                    document.getElementById('attributer_id').value = data.attributerid;
+                    document.getElementById('attributer-details').style.display = 'block';
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                document.getElementById('attributer-details').style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
