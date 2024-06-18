@@ -42,7 +42,6 @@ def import_employee():
                     dbsession.add(new_employee)
                 
                 dbsession.commit()
-                flash('Employees successfully imported', 'success')
                 
             except Exception as e:
                 flash(f'Error importing employees: {str(e)}', 'error')

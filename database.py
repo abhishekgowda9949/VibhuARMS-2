@@ -1,6 +1,6 @@
 # database.py
 from datetime import date
-from sqlalchemy import TEXT, VARCHAR, create_engine, Column, String, Integer, JSON
+from sqlalchemy import TEXT, VARCHAR, Date, Float, Text, create_engine, Column, String, Integer, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -47,6 +47,20 @@ class Employee(Base):
     email = Column(String(100), unique=True)
     mobile = Column(String(20))
     password = Column(String(50))
+
+class Metric(Base):
+    __tablename__ = 'metrics'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    attribute_no = Column(VARCHAR(100))
+    metric_no = Column(String(255), unique=True)
+    metric_description = Column(Text)  # Changed to Text for long strings
+    documents_required = Column(Text)  # Changed to Text for long strings
+    weightage = Column(Float)
+    assigned_to = Column(String(100))
+    department = Column(String(100))
+    email = Column(VARCHAR(100))
+    mobile = Column(String(20))
+    submition_date = Column(Date)
 
 # Create the table if it doesn't exist
 Base.metadata.create_all(engine)
