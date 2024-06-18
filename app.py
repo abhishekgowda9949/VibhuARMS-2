@@ -10,6 +10,10 @@ from IQAC.import_attributer import import_attributer_bp
 from IQAC.import_employee import import_employee_bp
 from IQAC.import_metric import import_metric_bp
 
+#ATTRIBUTER
+from ATTRIBUTER.attributer import attributer_bp
+from ATTRIBUTER.attributer_change_password import attributer_change_password_bp
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
@@ -28,6 +32,11 @@ app.register_blueprint(allot_attributer_bp)
 app.register_blueprint(import_attributer_bp)
 app.register_blueprint(import_employee_bp)
 app.register_blueprint(import_metric_bp)
+
+#ATTRIBUTER
+app.register_blueprint(attributer_bp)
+app.register_blueprint(attributer_change_password_bp)
+
 
 @app.route('/')
 def home():
