@@ -48,8 +48,17 @@ class Employee(Base):
     mobile = Column(String(20))
     password = Column(String(50))
 
-class Metric(Base):
-    __tablename__ = 'metrics'
+class Metric_Details(Base):
+    __tablename__ = 'metric_details'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    attribute_no = Column(VARCHAR(100))
+    metric_no = Column(String(255), unique=True)
+    metric_description = Column(Text)  # Changed to Text for long strings
+    documents_required = Column(Text)  # Changed to Text for long strings
+    weightage = Column(Float)
+
+class Metric_Assign(Base):
+    __tablename__ = 'metric_assign'
     id = Column(Integer, primary_key=True, autoincrement=True)
     attribute_no = Column(VARCHAR(100))
     metric_no = Column(String(255), unique=True)

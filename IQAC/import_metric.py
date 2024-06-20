@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import pandas as pd
-from database import DBSession, Metric  # Ensure Metric model is correctly imported
+from database import DBSession, Metric_Details # Ensure Metric model is correctly imported
 import numpy as np
 
 import_metric_bp = Blueprint('import_metric', __name__)
@@ -40,17 +40,12 @@ def import_metric():
                 dbsession = DBSession()
                 
                 for index, row in df.iterrows():
-                    new_metric = Metric(
+                    new_metric = Metric_Details(
                         attribute_no=row['attribute_no'],
                         metric_no=row['metric_no'],
                         metric_description=row['metric_description'],
                         documents_required=row['documents_required'],
-                        weightage=row['weightage'],
-                        assigned_to=row['assigned_to'],
-                        department=row['department'],
-                        email=row['email'],
-                        mobile=row['mobile'],
-                        submition_date=row['submition_date']
+                        weightage=row['weightage']
                     )
                     
                     dbsession.add(new_metric)

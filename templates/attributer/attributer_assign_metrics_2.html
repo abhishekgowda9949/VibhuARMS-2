@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Assign Metric | VibhuARMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="/static/styles.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Navbar included via Flask template -->
+    {% include 'attributer/navbar.html' %}
+    <br><br>
+    <div class="container-fluid px-4">
+        <h3 class="mt-4">Assign Metric</h3>
+        <hr /> 
+        {% if message %}
+            <script>
+                window.onload = function() {
+                    alert('{{ message }}');
+                };
+            </script>
+        {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" name="attribute_no" id="attribute_no" type="text" placeholder="Attribute No" value="{{metric.attribute_no}}" readonly />
+                    <label for="attribute_no">Attribute No</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" name="metric_no" id="metric_no" type="text" placeholder="Metric No" value="{{metric.metric_no}}" readonly />
+                    <label for="metric_no">Metric No</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" name="metric_description" id="metric_description" type="text" placeholder="Metric Description" value="{{metric.metric_description}}" readonly />
+                    <label for="metric_description">Metric Description</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" name="weightage" id="weightage" type="text" placeholder="Weightage" value="{{metric.weightage}}" readonly />
+                    <label for="weightage">Weightage</label>
+                </div>
+
+                <!-- Select Calendar -->
+                <h2>Select Calendar Type</h2>
+                <select id="calendarSelect" name="calendarSelect" class="form-select mt-3" onchange="reloadPage()">
+                    <option value="default">Select Calendar</option>
+                    <option value="Academic">Academic Calendar</option>
+                    <option value="Finance">Finance Calendar</option>
+                    <option value="Research">Research Calendar</option>
+                </select>
+
+                <div id="calendarDisplay" class="mt-4" style="display: none;">
+                    <h3>Select Month</h3>
+                    <div class="mb-3">
+                        <label for="startMonth" class="form-label">Start Month:</label>
+                        <input type="month" id="startMonth" name="startMonth" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="endMonth" class="form-label">End Month:</label>
+                        <input type="month" id="endMonth" name="endMonth" class="form-control">
+                    </div>
+                </div>
+                
+                <!-- Department Selection -->
+                <div id="departmentSelection" class="mt-4" style="display: none;">
+                    <h3>Select Department</h3>
+                    <select id="departmentSelect" name="departmentSelect" class="form-select mt-3" onchange="loadPrograms()">
+                        <option value="default">Select Department</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Management">Management</option>
+                    </select>
+                </div>
+
+                <!-- Program Selection -->
+                <div id="programSelection" class="mt-4" style="display: none;">
+                    <h3>Select Program</h3>
+                    <select id="programSelect" name="programSelect" class="form-select mt-3">
+                        <!-- Options will be dynamically populated based on the department selected -->
+                    </select>
+                </div>
+
+                <center>
+                    <button id="submitButton" type="submit" class="btn btn-primary mt-3" style="display: none;">Submit</button>
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#calendarSelect').change(function() {
+                reloadPage();
+            });
+
+            function reloadPage() {
+                var selectedOption = document.getElementById('calendarSelect').value;
+                if (selectedOption !== 'default') {
+                    document.getElementById('calendarDisplay').style.display = 'block';
+
+                    var startMonthInput = document.getElementById('startMonth');
+                    var endMonthInput = document.getElementById('endMonth');
+
+                    var currentYear = new Date().getFullYear();
+
+                    if (selectedOption === 'Academic') {
+                        startMonthInput.value = currentYear + '-06';
+                        endMonthInput.value = (currentYear + 1) + '-05';
+                    } else if (selectedOption === 'Finance') {
+                        startMonthInput.value = currentYear + '-04';
+                        endMonthInput.value = (currentYear + 1) + '-03';
+                    } else if (selectedOption === 'Research') {
+                        startMonthInput.value = currentYear + '-01';
+                        endMonthInput.value = currentYear + '-12';
+                    }
+
+                    document.getElementById('departmentSelection').style.display = 'block';
+                } else {
+                    document.getElementById('calendarDisplay').style.display = 'none';
+                    document.getElementById('departmentSelection').style.display = 'none';
+                    document.getElementById('programSelection').style.display = 'none';
+                    document.getElementById('submitButton').style.display = 'none'; // Hide submit button
+                }
+            }
+
+            $('#departmentSelect').change(function() {
+                loadPrograms();
+            });
+
+            function loadPrograms() {
+                var selectedDepartment = document.getElementById('departmentSelect').value;
+                var programSelect = document.getElementById('programSelect');
+                var submitButton = document.getElementById('submitButton');
+                programSelect.innerHTML = ''; // Clearing previous options
+
+                if (selectedDepartment === 'Engineering') {
+                    var engineeringPrograms = ['Aerospace Engineering', 'Biomedical Engineering', 'Chemical Engineering', 'Civil Engineering', 'Computer Engineering', 'Electrical Engineering', 'Environmental Engineering', 'Industrial Engineering', 'Materials Engineering', 'Mechanical Engineering', 'Nuclear Engineering', 'Petroleum Engineering', 'Software Engineering', 'Systems Engineering'];
+                    engineeringPrograms.forEach(function(program) {
+                        var option = document.createElement('option');
+                        option.text = program;
+                        option.value = program;
+                        programSelect.appendChild(option);
+                    });
+                } else if (selectedDepartment === 'Medical') {
+                    var medicalPrograms = ['Medicine', 'Dentistry', 'Nursing', 'Pharmacy', 'Physiotherapy', 'Veterinary Medicine', 'Biomedical Science', 'Medical Laboratory Science', 'Radiography', 'Occupational Therapy', 'Speech-Language Pathology', 'Optometry', 'Podiatry', 'Chiropractic'];
+                    medicalPrograms.forEach(function(program) {
+                        var option = document.createElement('option');
+                        option.text = program;
+                        option.value = program;
+                        programSelect.appendChild(option);
+                    });
+                } else if (selectedDepartment === 'Management') {
+                    var managementPrograms = ['Business Administration', 'Marketing Management', 'Finance', 'Human Resource Management', 'Operations Management', 'Supply Chain Management', 'International Business', 'Entrepreneurship', 'Strategic Management', 'Information Systems Management', 'Project Management', 'Hospitality Management', 'Healthcare Management', 'Public Administration', 'Nonprofit Management'];
+                    managementPrograms.forEach(function(program) {
+                        var option = document.createElement('option');
+                        option.text = program;
+                        option.value = program;
+                        programSelect.appendChild(option);
+                    });
+                }
+
+                document.getElementById('programSelection').style.display = 'block';
+                // Show or hide the submit button based on whether a program is selected
+                submitButton.style.display = programSelect.value !== 'default' ? 'block' : 'none';
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="assets/demo/chart-area-demo.js"></script>
+    <script src="assets/demo/chart-bar-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="js/datatables-simple-demo.js"></script>
+</body>
+</html>
