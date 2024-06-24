@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request
-from database import ATTRIBUTE_ALLOT, DBSession, Employee, Metric_Details
+from flask import Blueprint, flash, render_template, session, redirect, url_for, jsonify, request
+from database import ATTRIBUTE_ALLOT, DBSession, Employee, Metric_Assign, Metric_Details
 
 attributer_assign_metrics_bp = Blueprint('attributer_assign_metrics', __name__)
 
@@ -77,3 +77,44 @@ def fetch_metric_details():
         metric=metric_details,
         employees=employee_details_list
     )
+
+@attributer_assign_metrics_bp.route('/submit_metric', methods=['POST'])
+def submit_metric():
+    # Get form data
+    attribute_no = request.form.get('attribute_no')
+    metric_no = request.form.get('metric_no')
+    metric_description = request.form.get('metric_description')
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+    weightage = request.form.get('weightage')
+    department = request.form.get('department')
+    program = request.form.get('program')
+    employee_id = request.form.get('employee_id')
+
+    # Open a new database session
+    dbsession = DBSession()
+    
+    # Create a new Metric_Assign instance
+    new_metric_assign = Metric_Assign(
+        attribute_no=attribute_no,
+        metric_no=metric_no,
+        metric_description=metric_description,
+        start_date=start_date,
+        end_date=end_date,
+        weightage=weightage,
+        department=department,
+        program=program,
+        employee_id=employee_id
+    )
+
+    # Add to the session and commit
+    dbsession.add(new_metric_assign)
+    dbsession.commit()
+
+    # Provide feedback to the user
+    flash('Metric assigned successfully!', 'success')
+
+    # Close the database session
+    dbsession.close()
+
+    return render_template('attributer/dashboard.html' , message ="Your Metric Assignment Sucessfull")

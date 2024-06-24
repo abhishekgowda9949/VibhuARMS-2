@@ -21,95 +21,97 @@
         <hr /> 
         <div class="row justify-content-center">
             <div class="col-lg-5">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-floating mb-3">
-                            <input class="form-control" name="attribute_no" id="attribute_no" type="text" placeholder="Attribute No" value="{{metric.attribute_no}}" readonly />
-                            <label for="attribute_no">Attribute No</label>
-                        </div>
-                    </div>
-                
-                    <div class="col-md-4">
-                        <div class="form-floating mb-3">
-                            <input class="form-control" name="metric_no" id="metric_no" type="text" placeholder="Metric No" value="{{metric.metric_no}}" readonly />
-                            <label for="metric_no">Metric No</label>
-                        </div>
-                    </div>
-                
-                    <div class="col-md-4">
-                        <div class="form-floating mb-3">
-                            <input class="form-control" name="weightage" id="weightage" type="text" placeholder="Weightage" value="{{metric.weightage}}" readonly />
-                            <label for="weightage">Weightage</label>
-                        </div>
-                    </div>
-                </div>                
-
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="metric_description" id="metric_description" type="text" placeholder="Metric Description" value="{{metric.metric_description}}" readonly />
-                    <label for="metric_description">Metric Description</label>
-                </div>
-
-                <!-- Select Calendar -->
-                <center><h4>Select Calendar Type</h4></center>
-                <select id="calendarSelect" name="calendarSelect" class="form-select mt-3 mb-3" onchange="handleCalendarChange()">
-                    <option value="default">Select Calendar</option>
-                    <option value="Academic">Academic Calendar</option>
-                    <option value="Finance">Finance Calendar</option>
-                    <option value="Research">Research Calendar</option>
-                </select>
-
-                <!-- Calendar Display Section -->
-                <div id="calendarDisplay" class="mt-4 mb-3" style="display: none;">
-                    <center><h4>Selected Calendar Period</h4></center>
+                <form method="POST" action="{{ url_for('attributer_assign_metrics.submit_metric') }}">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="startMonth" class="form-label">Start Month:</label>
-                                <input type="date" id="startMonth" name="startMonth" class="form-control">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="attribute_no" id="attribute_no" type="text" placeholder="Attribute No" value="{{metric.attribute_no}}" readonly />
+                                <label for="attribute_no">Attribute No</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="endMonth" class="form-label">End Month:</label>
-                                <input type="date" id="endMonth" name="endMonth" class="form-control">
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="metric_no" id="metric_no" type="text" placeholder="Metric No" value="{{metric.metric_no}}" readonly />
+                                <label for="metric_no">Metric No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="weightage" id="weightage" type="text" placeholder="Weightage" value="{{metric.weightage}}" readonly />
+                                <label for="weightage">Weightage</label>
+                            </div>
+                        </div>
+                    </div>                
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="metric_description" id="metric_description" type="text" placeholder="Metric Description" value="{{metric.metric_description}}" readonly />
+                        <label for="metric_description">Metric Description</label>
+                    </div>
+
+                    <!-- Select Calendar -->
+                    <center><h4>Select Calendar Type</h4></center>
+                    <select id="calendarSelect" name="calendar_type" class="form-select mt-3 mb-3" onchange="handleCalendarChange()">
+                        <option value="default">Select Calendar</option>
+                        <option value="Academic">Academic Calendar</option>
+                        <option value="Finance">Finance Calendar</option>
+                        <option value="Research">Research Calendar</option>
+                    </select>
+
+                    <!-- Calendar Display Section -->
+                    <div id="calendarDisplay" class="mt-4 mb-3" style="display: none;">
+                        <center><h4>Selected Calendar Period</h4></center>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="startMonth" class="form-label">Start Month:</label>
+                                    <input type="date" id="startMonth" name="start_date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="endMonth" class="form-label">End Month:</label>
+                                    <input type="date" id="endMonth" name="end_date" class="form-control">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Department Selection -->
-                <div id="departmentSelection" class="mt-4 mb-3" style="display: none;">
-                    <center><h4>Select Department</h4></center>
-                    <select id="departmentSelect" name="departmentSelect" class="form-select mt-3" onchange="loadPrograms()">
-                        <option value="default">Select Department</option>
-                        <option value="Engineering">Engineering</option>
-                        <option value="Medical">Medical</option>
-                        <option value="Management">Management</option>
-                    </select>
-                </div>
 
-                <!-- Program Selection -->
-                <div id="programSelection" class="mt-4 mb-3" style="display: none;">
-                    <center><h4>Select Program</h4></center>
-                    <select id="programSelect" name="programSelect" class="form-select mt-3">
-                        <!-- Options will be dynamically populated based on the department selected -->
-                    </select><br>
-
-                    <!-- Responsibility Selection -->
-                    <div id="responsibilitySelection" style="display: none;">
-                        <center><h4>Select Responsibility</h4></center>
-                        <select name="responsibility" id="responsibility" class="form-select" required>
-                            <option value="default">Select Responsibility</option>
-                            {% for emp in employees %}
-                                <option value="{{ emp.name }}">{{ emp.name }}</option>
-                            {% endfor %}
+                    <!-- Department Selection -->
+                    <div id="departmentSelection" class="mt-4 mb-3" style="display: none;">
+                        <center><h4>Select Department</h4></center>
+                        <select id="departmentSelect" name="department" class="form-select mt-3" onchange="loadPrograms()">
+                            <option value="default">Select Department</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Medical">Medical</option>
+                            <option value="Management">Management</option>
                         </select>
                     </div>
 
-                    <center>
-                        <button id="submitButton" type="submit" class="btn btn-primary mt-3" style="display: none;">Submit</button>
-                    </center>
-                </div>
+                    <!-- Program Selection -->
+                    <div id="programSelection" class="mt-4 mb-3" style="display: none;">
+                        <center><h4>Select Program</h4></center>
+                        <select id="programSelect" name="program" class="form-select mt-3">
+                            <!-- Options will be dynamically populated based on the department selected -->
+                        </select><br>
+
+                        <!-- Responsibility Selection -->
+                        <div id="responsibilitySelection" style="display: none;">
+                            <center><h4>Select Responsibility</h4></center>
+                            <select name="employee_id" id="responsibility" class="form-select" required>
+                                <option value="default">Select Responsibility</option>
+                                {% for emp in employees %}
+                                    <option value="{{ emp.empid }}">{{ emp.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <center>
+                            <button id="submitButton" type="submit" class="btn btn-primary mt-3" style="display: none;">Submit</button>
+                        </center>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -152,7 +154,7 @@
             var programSelect = document.getElementById('programSelect');
             var selectedDepartment = departmentSelect.value;
             programSelect.innerHTML = ''; // Clear existing options
-            
+
             if (selectedDepartment === 'default') {
                 // Hide program selection, responsibility selection, and submit button if no department is selected
                 document.getElementById('programSelection').style.display = 'none';
@@ -172,7 +174,7 @@
                         programSelect.appendChild(option);
                     });
                 } else if (selectedDepartment === 'Medical') {
-                    var medicalPrograms = ['Medicine', 'Dentistry', 'Nursing', 'Pharmacy', 'Physiotherapy', 'Veterinary Medicine', 'Biomedical Science', 'Medical Laboratory Science', 'Radiography', 'Occupational Therapy', 'Speech-Language Pathology', 'Optometry', 'Podiatry', 'Chiropractic'];
+                    var medicalPrograms = ['Medicine', 'Nursing', 'Pharmacy', 'Dentistry', 'Medical Laboratory Science', 'Physiotherapy', 'Public Health', 'Radiography', 'Optometry', 'Biomedical Science', 'Anesthesiology', 'Pediatrics', 'Dermatology', 'Psychiatry'];
                     medicalPrograms.forEach(function(program) {
                         var option = document.createElement('option');
                         option.text = program;
@@ -180,7 +182,7 @@
                         programSelect.appendChild(option);
                     });
                 } else if (selectedDepartment === 'Management') {
-                    var managementPrograms = ['Business Administration', 'Marketing Management', 'Finance', 'Human Resource Management', 'Operations Management', 'Supply Chain Management', 'International Business', 'Entrepreneurship', 'Strategic Management', 'Information Systems Management', 'Project Management', 'Hospitality Management', 'Healthcare Management', 'Public Administration', 'Nonprofit Management'];
+                    var managementPrograms = ['Business Administration', 'Marketing', 'Human Resource Management', 'Finance', 'Accounting', 'Supply Chain Management', 'International Business', 'Entrepreneurship', 'Project Management', 'Operations Management', 'Hospitality Management', 'Public Administration', 'Real Estate Management', 'Tourism Management', 'Event Management'];
                     managementPrograms.forEach(function(program) {
                         var option = document.createElement('option');
                         option.text = program;
@@ -189,17 +191,14 @@
                     });
                 }
 
-                // Show the responsibility selection dropdown
+                // Show the responsibility selection and submit button once a department is selected
                 document.getElementById('responsibilitySelection').style.display = 'block';
-                // Show the submit button
                 document.getElementById('submitButton').style.display = 'block';
             }
         }
-    </script>    
+    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-    <script src="js/datatables-simple-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="/static/scripts.js"></script>
 </body>
 </html>
