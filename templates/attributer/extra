@@ -65,13 +65,13 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="startMonth" class="form-label">Start Month:</label>
-                                <input type="date" id="startMonth" name="startMonth" class="form-control">
+                                <input type="text" id="startMonth" name="startMonth" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="endMonth" class="form-label">End Month:</label>
-                                <input type="date" id="endMonth" name="endMonth" class="form-control">
+                                <input type="text" id="endMonth" name="endMonth" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -126,14 +126,14 @@
                 document.getElementById('calendarDisplay').style.display = 'block';
 
                 if (selectedOption === 'Academic') {
-                    startMonthInput.value = currentYear + '-06-01';
-                    endMonthInput.value = (currentYear + 1) + '-05-31';
+                    startMonthInput.value = 'June ' + currentYear;
+                    endMonthInput.value = 'May ' + (currentYear + 1);
                 } else if (selectedOption === 'Finance') {
-                    startMonthInput.value = currentYear + '-04-01';
-                    endMonthInput.value = (currentYear + 1) + '-03-31';
+                    startMonthInput.value = 'April ' + currentYear;
+                    endMonthInput.value = 'March ' + (currentYear + 1);
                 } else if (selectedOption === 'Research') {
-                    startMonthInput.value = currentYear + '-01-01';
-                    endMonthInput.value = currentYear + '-12-31';
+                    startMonthInput.value = 'January ' + currentYear;
+                    endMonthInput.value = 'December ' + currentYear;
                 }
 
                 document.getElementById('departmentSelection').style.display = 'block';
