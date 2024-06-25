@@ -16,6 +16,11 @@ from ATTRIBUTER.attributer_change_password import attributer_change_password_bp
 from ATTRIBUTER.attributer_assign_metrics import attributer_assign_metrics_bp
 from ATTRIBUTER.attributer_monitor_metrics import attributer_monitor_metrics_bp
 
+#USER
+from user.user import user_bp
+from user.user_change_password import user_change_password_bp
+from user.user_view_targets import user_view_targets_bp
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
@@ -41,6 +46,10 @@ app.register_blueprint(attributer_change_password_bp)
 app.register_blueprint(attributer_assign_metrics_bp)
 app.register_blueprint(attributer_monitor_metrics_bp)
 
+#USER
+app.register_blueprint(user_bp)
+app.register_blueprint(user_change_password_bp)
+app.register_blueprint(user_view_targets_bp)
 
 @app.route('/')
 def home():
