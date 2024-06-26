@@ -56,7 +56,31 @@
                                 <td>{{ metric.department }}</td>
                                 <td>{{ metric.program }}</td>
                                 <td>{{ metric.employee_id }}</td>
-                                <td>{{ metric.metric_pdf }}</td>
+                                {% if metric.metric_pdf == none %}
+                                    <td><center>Not Uploaded</center></td>
+                                {% else %}
+                                <td>
+                                    <table class="table table-bordered" style="width: auto;">
+                                        <tr>
+                                          <th>Date</th>
+                                          <th>Time</th>
+                                          <th>File Name</th>
+                                          <th>Download</th>
+                                        </tr>
+                                        {% for pdf_file in metric.metric_pdf.split(',') %}
+                                        {% set parts = pdf_file.strip().split('_') %}
+                                        <tr>
+                                            <td>{{ parts[0] }}</td>
+                                            <td>{{ parts[1] }}</td>
+                                            <td>{{ '_'.join(parts[2:]) }}</td>
+                                            <td>
+                                                <a class="btn btn-primary" href="{{ url_for('user_view_metrics.download', metricid=metric.id, filename=pdf_file) }}">Download</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                                {% endif %} 
                                 <td>{{ metric.metric_status }}</td>
                                 <td>
                                     <button type="button" class="btn btn-link" onclick="userupdateDetails('{{ metric.id }}')">

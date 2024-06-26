@@ -21,16 +21,16 @@ def user_view_metrics():
         # Redirect to login page if user is not logged in
         return render_template('user/login.html', message="You are not LoggedIn")
     
-# @user_view_targets_bp.route('/download/<string:file_id>/<path:filename>')
-# def download(file_id, filename):
-#     dbsession = DBSession()
-#     targets = dbsession.query(Target).filter(Target.parameter_id == file_id).first()
-#     filenames = targets.target_pdf.split(',')
+@user_view_metrics_bp.route('/download/<string:metricid>/<path:filename>')
+def download(metricid, filename):
+    dbsession = DBSession()
+    metric_details = dbsession.query(Metric_Assign).filter(Metric_Assign.id == metricid).first()
+    filenames = metric_details.metric_pdf.split(',')
     
-#     if filename in filenames:
-#         return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
-#     else:
-#         return "File not found.", 404
+    if filename in filenames:
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+    else:
+        return "File not found.", 404
 
 @user_view_metrics_bp.route('/user_update_details/<MetricId>')
 def user_update_details(MetricId):
