@@ -84,6 +84,7 @@ def submit_metric():
     attribute_no = request.form.get('attribute_no')
     metric_no = request.form.get('metric_no')
     metric_description = request.form.get('metric_description')
+    calendar_type = request.form.get('calendar_type')
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')
     weightage = request.form.get('weightage')
@@ -99,12 +100,14 @@ def submit_metric():
         attribute_no=attribute_no,
         metric_no=metric_no,
         metric_description=metric_description,
+        calendar_type = calendar_type,
         start_date=start_date,
         end_date=end_date,
         weightage=weightage,
         department=department,
         program=program,
-        employee_id=employee_id
+        employee_id=employee_id,
+        metric_status = 'Assigned'
     )
 
     # Add to the session and commit

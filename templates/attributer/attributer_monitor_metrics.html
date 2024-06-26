@@ -31,12 +31,15 @@
                         <th>Attribute No</th>
                         <th>Metric No</th>
                         <th>Metric Description</th>
+                        <th>Calendar Type</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Weightage</th>
                         <th>Department</th>
                         <th>Program</th>
                         <th>Employee ID</th>
+                        <th>Files Uploaded</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,12 +48,15 @@
                             <td>{{ metric.attribute_no }}</td>
                             <td>{{ metric.metric_no }}</td>
                             <td style="white-space: normal; overflow-wrap: break-word;">{{ metric.metric_description }}</td>
+                            <td>{{ metric.calendar_type }}</td>
                             <td>{{ metric.start_date }}</td>
                             <td>{{ metric.end_date }}</td>
                             <td>{{ metric.weightage }}</td>
                             <td>{{ metric.department }}</td>
                             <td>{{ metric.program }}</td>
                             <td>{{ metric.employee_id }}</td>
+                            <td>{{ metric.metric_pdf }}</td>
+                            <td>{{ metric.metric_status }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

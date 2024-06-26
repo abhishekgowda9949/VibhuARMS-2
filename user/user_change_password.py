@@ -42,8 +42,8 @@ def user_change_password():
                 return render_template('user/dashboard.html' , messages ="Your Password is Sucessfuly Changed")
             else:
                 # Handle case where current password is incorrect
-                return render_template('user/change_password.html', error="New password and confirmed password don't match",existing_password = existing_password)
+                return render_template('user/user_change_password.html', error="New password and confirmed password don't match",existing_password = existing_password)
         else:
-            return render_template('user/change_password.html', error="Current password is incorrect",existing_password = existing_password)
+            return render_template('user/user_change_password.html', error="Current password is incorrect",existing_password = existing_password)
     else:
-        return render_template('user/change_password.html', existing_password=existing_password)
+        return render_template('user/user_change_password.html', existing_password=existing_password)

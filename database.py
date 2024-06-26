@@ -61,12 +61,15 @@ class Metric_Assign(Base):
     attribute_no = Column(VARCHAR(100))
     metric_no = Column(String(255), ForeignKey('metric_details.metric_no'))
     metric_description = Column(Text)
+    calendar_type = Column(VARCHAR(100))
     start_date = Column(Date)
     end_date = Column(Date)
     weightage = Column(Float)
     department = Column(String(100))
     program = Column(String(100))
     employee_id = Column(String(10), ForeignKey('employees.empid'))
+    metric_pdf = Column(TEXT)
+    metric_status = Column(VARCHAR(255))
 
 # Create the table if it doesn't exist
 Base.metadata.create_all(engine)
