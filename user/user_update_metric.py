@@ -1,6 +1,6 @@
 import calendar
 import os
-from flask import Blueprint, app, render_template, request, redirect, url_for, session, jsonify ,current_app
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify ,current_app
 from database import DBSession, Metric_Assign
 from werkzeug.utils import secure_filename
 import datetime

@@ -1,5 +1,8 @@
-from flask import Blueprint, flash, render_template, session, redirect, url_for, jsonify, request
+import datetime
+import os
+from flask import Blueprint, current_app, flash, render_template, session, redirect, url_for, jsonify, request
 from database import ATTRIBUTE_ALLOT, DBSession, Employee, Metric_Assign, Metric_Details
+from werkzeug.utils import secure_filename
 
 attributer_assign_metrics_bp = Blueprint('attributer_assign_metrics', __name__)
 
@@ -121,3 +124,78 @@ def submit_metric():
     dbsession.close()
 
     return render_template('attributer/dashboard.html' , message ="Your Metric Assignment Sucessfull")
+
+@attributer_assign_metrics_bp.route('/upload_pdf', methods=['POST'])
+def upload_pdf():
+    # Get the metric ID from the POST request
+    metric_id = request.form.get('metric_id')
+    if not metric_id:
+        return jsonify({'error': 'Metric ID is required'}), 400
+
+    # Open a new database session
+    dbsession = DBSession()
+    try:
+        # Fetch the metric details by metric ID
+        metric = dbsession.query(Metric_Details).filter(Metric_Details.metric_no == metric_id).first()
+        if not metric:
+            return jsonify({'error': 'Metric not found'}), 404
+    finally:
+        # Close the database session
+        dbsession.close()
+
+    # Prepare metric details for the template
+    metric_details = {
+        'id':metric.id,
+        'attribute_no': metric.attribute_no,
+        'metric_no': metric.metric_no,
+        'metric_description': metric.metric_description,
+        'documents_required': metric.documents_required,
+        'weightage': metric.weightage
+    }
+
+    # Render the template with metric and employee details
+    return render_template(
+        'attributer/attributer_upload_pdf.html', 
+        metric=metric_details
+    )
+
+@attributer_assign_metrics_bp.route('/submit_documents', methods=['GET', 'POST'])
+def submit_documents():
+    if 'username' not in session:
+        # Redirect to login page if user is not logged in
+        return render_template('index.html', message="You are not logged in")
+
+    metric_detail_id = request.form['metric_detail_id']
+
+    username = session['username']
+    dbsession = DBSession()
+    metric_details = dbsession.query(Metric_Details).filter(Metric_Details.id == metric_detail_id).first()
+
+    if metric_details:            
+        uploaded_files = request.files.getlist('attribute_files[]')
+        if uploaded_files and uploaded_files[0].filename != '':
+            current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+            # Process each uploaded file
+            new_filenames = []
+            for file in uploaded_files:
+                # Append current datetime to the filename
+                filename = current_datetime + '_' + secure_filename(file.filename)
+                new_filenames.append(filename)
+        
+                # Save the file to disk
+                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                
+            if metric_details.attribute_pdf is None:
+                metric_details.attribute_pdf = new_filenames
+                updated_filenames = ','.join(new_filenames)  # Initialize updated_filenames for new record
+            else:
+                existing_filenames = metric_details.attribute_pdf if metric_details.attribute_pdf else ""
+                updated_filenames = ','.join([existing_filenames, *new_filenames]) if existing_filenames else ','.join(new_filenames)
+                metric_details.attribute_pdf = updated_filenames
+
+        metric_details.attribute_status = request.form['attribute_status']
+        dbsession.commit()
+        dbsession.close()
+            
+        return render_template('attributer/dashboard.html', message ="Documents Upload Sucessfull")

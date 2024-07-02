@@ -53,7 +53,9 @@ class Metric_Details(Base):
     metric_no = Column(String(255), unique=True)
     metric_description = Column(Text)
     documents_required = Column(Text)
-    weightage = Column(Float)
+    weightage = Column(Float)    
+    attribute_pdf = Column(TEXT)
+    attribute_status = Column(VARCHAR(255))
 
 class Metric_Assign(Base):
     __tablename__ = 'metric_assign'

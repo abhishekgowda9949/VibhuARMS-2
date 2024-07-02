@@ -45,7 +45,10 @@
                             <td style="white-space: normal; overflow-wrap: break-word;">{{ metric.documents_required }}</td>
                             <td>{{ metric.weightage }}</td>
                             <td>
-                                <button class="btn btn-primary fetch-details" data-metric-id="{{ metric.metric_no }}">Assign Metric</button>
+                                <center>
+                                    <button class="btn btn-primary fetch-details" data-metric-id="{{ metric.metric_no }}">Assign Metric</button><br><br>
+                                    <button class="btn btn-success upload-pdf" data-metric-id="{{ metric.metric_no }}">Upload Documents</button>
+                                </center>
                             </td>
                         </tr>
                         {% endfor %}
@@ -70,6 +73,24 @@
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = '/fetch_metric_details';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'metric_id';
+                    input.value = metricId;
+                    form.appendChild(input);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            });
+
+            document.querySelectorAll('.upload-pdf').forEach(button => {
+                button.addEventListener('click', function() {
+                    const metricId = this.getAttribute('data-metric-id');
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/upload_pdf';
                     
                     const input = document.createElement('input');
                     input.type = 'hidden';
