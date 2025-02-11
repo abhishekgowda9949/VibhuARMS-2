@@ -1,0 +1,9 @@
+cd public_html/VibhuARMS
+wget https://bootstrap.pypa.io/pip/3.6/get-pip.py
+python3 get-pip.py
+pip3 --version
+python3 get-pip.py --no-cache-dir
+pip3 install virtualenv
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt

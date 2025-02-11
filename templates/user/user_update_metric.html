@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Update Metric | VibhuARMS</title>
+
+    <!-- Use url_for for static CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Include the navbar -->
+    {% include 'user/navbar.html' %}<br><br>
+
+    <div class="container-fluid px-4">
+        <h3 class="mt-4">Update Metric</h3><hr /> 
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <!-- Updated form with multipart/form-data for file uploads -->
+                <form action="{{ url_for('user_update_metric.user_update_metric') }}" method="post" enctype="multipart/form-data">
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="metric_assign_id" id="metric_assign_id" type="text" placeholder="Metric Assign ID" value="{{metric_details.id}}" hidden/>
+                        <label for="metric_assign_id">Metric Assign ID</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="attribute_no" id="attribute_no" type="text" placeholder="Attribute No" value="{{metric_details.attribute_no}}" readonly />
+                                <label for="attribute_no">Attribute No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="metric_no" id="metric_no" type="text" placeholder="Metric No" value="{{metric_details.metric_no}}" readonly />
+                                <label for="metric_no">Metric No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="weightage" id="weightage" type="text" placeholder="Weightage" value="{{metric_details.weightage}}" readonly />
+                                <label for="weightage">Weightage</label>
+                            </div>
+                        </div>
+                    </div>               
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="metric_description" id="metric_description" type="text" placeholder="Metric Description" value="{{metric_details.metric_description}}" readonly />
+                        <label for="metric_description">Metric Description</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="calendar" type="text" value="{{ metric_details.calendar_type }}" readonly/>
+                        <label for="inputdepartment">Selected Calendar</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="department" id="department" type="text" placeholder="Selected Department" value="{{ metric_details.department }}" readonly/>
+                                <label for="department">Selected Department</label>
+                            </div>
+                        </div>
+                    
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="program" id="program" type="text" placeholder="Selected Program" value="{{ metric_details.program }}" readonly/>
+                                <label for="program">Selected Program</label>
+                            </div>
+                        </div>
+                    </div>                    
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="responsibility" type="text" value="{{ employee_name }}" readonly/>
+                        <label for="inputTargetResponsibility">Target Responsibility</label>
+                    </div>
+
+                    <!-- File input for multiple files -->
+                    <div class="mb-3">
+                        <input class="form-control" name="files[]" type="file" value="None" multiple required/>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="completed_target" type="text" placeholder="Enter Completed Targets"/>
+                        <label for="completed_target_no">Completed Targets</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select class="form-control" id="metric_status" name="metric_status" required>
+                            <option value="" disabled selected>Select Status</option>
+                            <option value="Working">Working</option>
+                            <option value="Submitted">Submitted</option>
+                        </select>
+                        <label for="metric_status">Metric Status</label>
+                    </div>
+                    
+                    <center><button id="submitButton" type="submit" class="btn btn-primary mt-3">Submit</button></center><br>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='assets/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/demo/chart-bar-demo.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
+</body>
+</html>

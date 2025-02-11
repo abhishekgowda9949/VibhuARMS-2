@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Monitor Metrics | VibhuARMS</title>
+
+    <!-- Use Flask's url_for to link static CSS files -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    
+    <style>
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    {% include 'iqac/navbar.html' %}<br><br>
+    <div class="container-fluid px-4">
+        <h3 class="mt-4">Monitor Metrics</h3><hr /> 
+        <div class="row justify-content-center">
+            <div class="table-container">
+                <table class="table table-bordered" style="white-space: nowrap; text-overflow: ellipsis;">
+                    <thead>
+                        <tr>
+                            <th>Attribute No</th>
+                            <th>Metric No</th>
+                            <th>Metric Description</th>
+                            <th>Calendar Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Weightage</th>
+                            <th>Department</th>
+                            <th>Program</th>
+                            <th>Employee ID</th>
+                            <th>Files Uploaded</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                            <th>Send Mail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for metric in assigned_metrics %}
+                            <tr>
+                                <td>{{ metric.attribute_no }}</td>
+                                <td>{{ metric.metric_no }}</td>
+                                <td style="white-space: normal; overflow-wrap: break-word;">{{ metric.metric_description }}</td>
+                                <td>{{ metric.calendar_type }}</td>
+                                <td>{{ metric.start_date }}</td>
+                                <td>{{ metric.end_date }}</td>
+                                <td>{{ metric.weightage }}</td>
+                                <td>{{ metric.department }}</td>
+                                <td>{{ metric.program }}</td>
+                                <td>{{ metric.employee_id }}</td>
+                                {% if metric.metric_pdf == none %}
+                                    <td><center>Not Uploaded</center></td>
+                                {% else %}
+                                <td>
+                                    <table class="table table-bordered" style="width: auto;">
+                                        <tr>
+                                          <th>Date</th>
+                                          <th>Time</th>
+                                          <th>File Name</th>
+                                          <th>Action</th>
+                                        </tr>
+                                        {% for pdf_file in metric.metric_pdf.split(',') %}
+                                        {% set parts = pdf_file.strip().split('_') %}
+                                        <tr>
+                                            <td>{{ parts[0] }}</td>
+                                            <td>{{ parts[1] }}</td>
+                                            <td>{{ '_'.join(parts[2:]) }}</td>
+                                            <td>
+                                                <!-- View button -->
+                                                <a href="{{ url_for('iqac_monitor_metrics.iqac_monitor_metric_view', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-eye" style="color: blue"></i></a>&nbsp;
+                                                <!-- Download link -->
+                                                <a href="{{ url_for('iqac_monitor_metrics.iqac_monitor_metric_download', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-download" style="color: #4DFF00;"></i></a>&nbsp;
+                                                <!-- Delete link -->
+                                                <a href="{{ url_for('iqac_monitor_metrics.iqac_monitor_metric_delete', file_id=metric.id, filename=pdf_file) }}" onclick="return confirmDelete()"><i class="fas fa-trash-alt" style="color: red;"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                                {% endif %}
+                                <td>{{ metric.metric_status }}</td>
+                                <td>{{ metric.metric_remarks }}</td>
+                                <td><!-- Mail link -->
+                                    <center><a href="{{ url_for('iqac_monitor_metrics.iqac_monitor_metric_mail', file_id=metric.id) }}"><i class="fas fa-envelope" style="font-size:36px;"></i></a></center>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this file?");
+        }
+    </script>    
+
+    <!-- Use Flask's url_for to link static JS files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

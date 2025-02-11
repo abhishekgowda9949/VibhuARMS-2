@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Login Page" />
+    <meta name="author" content="VibhuARMS" />
+    <title>Home | VibhuARMS</title>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <!-- CSS from static folder -->
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    
+    <style>
+        body {
+            background: url('{{ url_for('static', filename='assets/img/index.png') }}') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .nav-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-button:hover {
+            background: linear-gradient(90deg, #4e8ef7, #2f60c3);
+        }
+
+        .tabs-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            font-size: 14px;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-button:hover {
+            background: linear-gradient(90deg, #feb47b, #ff9966);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(90deg, #ff512f, #dd2476);
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #43cea2, #185a9d);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #3fb29a, #134879);
+        }
+
+        .btn-primary.active {
+            background: linear-gradient(90deg, #1f4037, #99f2c8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container body-bg" id="container" style="background-image: url(https://img.freepik.com/premium-vector/abstract-wave-white-gray-tone-background_122299-82.jpg?w=900);">
+        <img src="{{ url_for('static', filename='assets/img/vibhu-1.png') }}" alt="VibhuARMS" height="100px" width="100px">
+        <h1>VibhuARMS</h1>
+
+        {% if message %}
+        <script>
+            window.onload = function() {
+                alert('{{ message }}');
+            };
+        </script>
+        {% endif %}
+
+        <!-- Navigation Buttons -->
+        <div class="nav-container">
+            <button class="nav-button" id="institution">Institution</button>
+            <button class="nav-button" id="vibhuarms">VibhuARMS</button>
+        </div>
+
+        <!-- Institution Forms -->
+        <div class="form-container institution-container">
+            <div class="tabs-container">
+                <button class="tab-button" id="iqaclogin">IQ-ADMIN</button>
+                <button class="tab-button" id="userlogin">USER</button>
+            </div>
+
+            <div class="form-container iqac-container">
+                <form method="POST" action="{{ url_for('iqac.iqac_dashboard') }}">
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="iqacemail" type="email" placeholder="IQAC Email" required />
+                        <label for="iqacemail">IQAC Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="iqacpassword" type="password" placeholder="Password" required />
+                        <label for="password">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary iqac-login-button">IQAC Sign In</button>
+                </form>
+            </div>
+
+            <div class="form-container user-container">
+                <form method="POST" action="{{ url_for('user.user_dashboard') }}">
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="email" name="useremail" placeholder="User Email" required />
+                        <label for="uemail">User Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="password" name="userpassword" placeholder="Password" required />
+                        <label for="password">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary user-login-button">User Sign In</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VibhuARMS Form -->
+        <div class="form-container vibhuarms-container">
+            <form method="POST" action="{{ url_for('attributer.attributer_dashboard') }}">
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="email" name="attributeremail" placeholder="Attributer Email" required />
+                    <label for="aemail">Attributer Email</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="password" name="attributerpassword" placeholder="Password" required />
+                    <label for="password">Password</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Attributer Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navigation Buttons
+        const institutionBtn = document.getElementById('institution');
+        const vibhuarmsBtn = document.getElementById('vibhuarms');
+
+        const institutionContainer = document.querySelector('.institution-container');
+        const vibhuarmsContainer = document.querySelector('.vibhuarms-container');
+
+        // Institution Tabs
+        const iqacloginBtn = document.getElementById('iqaclogin');
+        const userloginBtn = document.getElementById('userlogin');
+        const iqacContainer = document.querySelector('.iqac-container');
+        const userContainer = document.querySelector('.user-container');
+
+        // Show Institution section
+        institutionBtn.addEventListener('click', () => {
+            institutionContainer.classList.add('active');
+            vibhuarmsContainer.classList.remove('active');
+        });
+
+        // Show VibhuARMS section
+        vibhuarmsBtn.addEventListener('click', () => {
+            vibhuarmsContainer.classList.add('active');
+            institutionContainer.classList.remove('active');
+        });
+
+        // IQAC Tab
+        iqacloginBtn.addEventListener('click', () => {
+            iqacContainer.classList.add('active');
+            userContainer.classList.remove('active');
+            iqacloginBtn.classList.add('active');
+            userloginBtn.classList.remove('active');
+        });
+
+        // User Tab
+        userloginBtn.addEventListener('click', () => {
+            userContainer.classList.add('active');
+            iqacContainer.classList.remove('active');
+            userloginBtn.classList.add('active');
+            iqacloginBtn.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

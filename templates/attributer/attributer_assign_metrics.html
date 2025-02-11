@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Assign Metrics | VibhuARMS</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    
+    <!-- Updated static file paths using Flask's url_for function -->
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+    
+    <!-- External JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    
+    <style>
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Navbar included via Flask template -->
+    {% include 'attributer/navbar.html' %}<br><br>
+    
+    <div class="container-fluid px-4">
+        <h3 class="mt-4">Assign Metrics</h3><hr /> 
+        <div class="row justify-content-center">
+            <div class="table-container">
+                <table class="table table-bordered" style="white-space: nowrap; text-overflow: ellipsis;">
+                    <thead>
+                        <tr>
+                            <th>Attribute No</th>
+                            <th>Metric No</th>
+                            <th>Metric Description</th>
+                            <th>Documents Required</th>
+                            <th>Weightage</th>
+                            <th>Documents</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for metric in metrics %}
+                        <tr>
+                            <td>{{ metric.attribute_no }}</td>
+                            <td>{{ metric.metric_no }}</td>
+                            <td style="white-space: normal; overflow-wrap: break-word;">{{ metric.metric_description }}</td>
+                            <td style="white-space: normal; overflow-wrap: break-word;">{{ metric.documents_required }}</td>
+                            <td>{{ metric.weightage }}</td>
+                            
+                            {% if metric.attribute_pdf == none %}
+                                <td><center>Not Uploaded</center></td>
+                            {% else %}
+                            <td>
+                                <table class="table table-bordered" style="width: auto;">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>File Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    {% for pdf_file in metric.attribute_pdf.split(',') %}
+                                    {% set parts = pdf_file.strip().split('_') %}
+                                    <tr>
+                                        <td>{{ parts[0] }}</td>
+                                        <td>{{ parts[1] }}</td>
+                                        <td>{{ '_'.join(parts[2:]) }}</td>
+                                        <td>
+                                            <!-- View button -->
+                                            <a href="{{ url_for('attributer_assign_metrics.attributer_file_view', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-eye" style="color: blue"></i></a>&nbsp;
+                                            <!-- Download link -->
+                                            <a href="{{ url_for('attributer_assign_metrics.attributer_file_download', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-download" style="color: #4DFF00;"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                            {% endif %}
+                            
+                            <td>{{ metric.attribute_status }}</td>
+                            <td>
+                                <center>
+                                    <button class="btn btn-primary fetch-details" data-metric-id="{{ metric.metric_no }}">Assign Metric</button><br><br>
+                                    <button class="btn btn-success upload-pdf" data-metric-id="{{ metric.metric_no }}">Upload Documents</button>
+                                </center>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- External JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    
+    <!-- Static JS file reference using Flask's url_for -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dataTable = new simpleDatatables.DataTable('.table-container table', {
+                searchable: true,
+                sortable: false,
+                paging: false
+            });
+
+            document.querySelectorAll('.fetch-details').forEach(button => {
+                button.addEventListener('click', function() {
+                    const metricId = this.getAttribute('data-metric-id');
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{{ url_for('attributer_assign_metrics.fetch_metric_details') }}" ;   
+                    
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'metric_id';
+                    input.value = metricId;
+                    form.appendChild(input);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            });
+
+            document.querySelectorAll('.upload-pdf').forEach(button => {
+                button.addEventListener('click', function() {
+                    const metricId = this.getAttribute('data-metric-id');
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{{ url_for('attributer_assign_metrics.upload_pdf') }}" ;
+                    
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'metric_id';
+                    input.value = metricId;
+                    form.appendChild(input);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Assign Metric | VibhuARMS</title>
+    
+    <!-- External CSS links -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    
+    <!-- Updated static file paths using url_for -->
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+    
+    <!-- External JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Navbar included via Flask template -->
+    {% include 'iqac/navbar.html' %}
+    <br><br>
+    <div class="container-fluid px-4">
+        <h3 class="mt-4">Assign Metric</h3>
+        <hr /> 
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <form method="POST" action="{{ url_for('allot_metrics.submit_metric') }}">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="attribute_no" id="attribute_no" type="text" placeholder="Attribute No" value="{{metric.attribute_no}}" readonly />
+                                <label for="attribute_no">Attribute No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="metric_no" id="metric_no" type="text" placeholder="Metric No" value="{{metric.metric_no}}" readonly />
+                                <label for="metric_no">Metric No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="weightage" id="weightage" type="text" placeholder="Weightage" value="{{metric.weightage}}" readonly />
+                                <label for="weightage">Weightage</label>
+                            </div>
+                        </div>
+                    </div>                
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="metric_description" id="metric_description" type="text" placeholder="Metric Description" value="{{metric.metric_description}}" readonly />
+                        <label for="metric_description">Metric Description</label>
+                    </div>
+
+                    <!-- Select Calendar -->
+                    <center><h4>Select Calendar Type</h4></center>
+                    <select id="calendarSelect" name="calendar_type" class="form-select mt-3 mb-3" onchange="handleCalendarChange()">
+                        <option value="default">Select Calendar</option>
+                        <option value="Academic">Academic Calendar</option>
+                        <option value="Finance">Finance Calendar</option>
+                        <option value="Research">Research Calendar</option>
+                    </select>
+
+                    <!-- Calendar Display Section -->
+                    <div id="calendarDisplay" class="mt-4 mb-3" style="display: none;">
+                        <center><h4>Selected Calendar Period</h4></center>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="startMonth" class="form-label">Start Month:</label>
+                                    <input type="date" id="startMonth" name="start_date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="endMonth" class="form-label">End Month:</label>
+                                    <input type="date" id="endMonth" name="end_date" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Department Selection -->
+                    <div id="departmentSelection" class="mt-4 mb-3" style="display: none;">
+                        <center><h4>Select Department</h4></center>
+                        <select id="departmentSelect" name="department" class="form-select mt-3" onchange="loadPrograms()">
+                            <option value="default">Select Department</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Medical">Medical</option>
+                            <option value="Management">Management</option>
+                        </select>
+                    </div>
+
+                    <!-- Program Selection -->
+                    <div id="programSelection" class="mt-4 mb-3" style="display: none;">
+                        <center><h4>Select Program</h4></center>
+                        <select id="programSelect" name="program" class="form-select mt-3">
+                            <!-- Options will be dynamically populated based on the department selected -->
+                        </select><br>
+
+                        <!-- Responsibility Selection -->
+                        <div id="responsibilitySelection" style="display: none;">
+                            <center><h4>Select Responsibility</h4></center>
+                            <select name="employee_id" id="responsibility" class="form-select" required>
+                                <option value="default">Select Responsibility</option>
+                                {% for emp in employees %}
+                                    <option value="{{ emp.empid }}">{{ emp.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div><br>
+
+                        <!-- Target Selection -->
+                        <div id="allottarget" style="display: none;">
+                            <center><h4>Enter Targets</h4></center>
+                                <input class="form-control" name="alloted_target" id="alloted_target" type="text" placeholder="Enter Targets"/>
+                        </div>
+
+                        <center>
+                            <button id="submitButton" type="submit" class="btn btn-primary mt-3" style="display: none;">Submit</button>
+                        </center>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle calendar and department selection -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+    <script>
+        // JavaScript to handle calendar and department selection
+        function handleCalendarChange() {
+            var selectedOption = document.getElementById('calendarSelect').value;
+            var startMonthInput = document.getElementById('startMonth');
+            var endMonthInput = document.getElementById('endMonth');
+            var currentYear = new Date().getFullYear();
+
+            if (selectedOption !== 'default') {
+                document.getElementById('calendarDisplay').style.display = 'block';
+
+                if (selectedOption === 'Academic') {
+                    startMonthInput.value = currentYear + '-06-01';
+                    endMonthInput.value = (currentYear + 1) + '-05-31';
+                } else if (selectedOption === 'Finance') {
+                    startMonthInput.value = currentYear + '-04-01';
+                    endMonthInput.value = (currentYear + 1) + '-03-31';
+                } else if (selectedOption === 'Research') {
+                    startMonthInput.value = currentYear + '-01-01';
+                    endMonthInput.value = currentYear + '-12-31';
+                }
+
+                document.getElementById('departmentSelection').style.display = 'block';
+            } else {
+                document.getElementById('calendarDisplay').style.display = 'none';
+                document.getElementById('departmentSelection').style.display = 'none';
+                document.getElementById('programSelection').style.display = 'none';
+                document.getElementById('responsibilitySelection').style.display = 'none';
+                document.getElementById('submitButton').style.display = 'none';
+            }
+        }
+
+        // JavaScript to load programs based on selected department
+        function loadPrograms() {
+            var departmentSelect = document.getElementById('departmentSelect');
+            var programSelect = document.getElementById('programSelect');
+            var selectedDepartment = departmentSelect.value;
+            programSelect.innerHTML = ''; // Clear existing options
+
+            if (selectedDepartment === 'default') {
+                // Hide program selection, responsibility selection, and submit button if no department is selected
+                document.getElementById('programSelection').style.display = 'none';
+                document.getElementById('responsibilitySelection').style.display = 'none';
+                document.getElementById('submitButton').style.display = 'none';
+            } else {
+                // Show the program selection dropdown
+                document.getElementById('programSelection').style.display = 'block';
+
+                // Load programs based on selected department
+                if (selectedDepartment === 'Engineering') {
+                    var engineeringPrograms = ['Aerospace Engineering', 'Biomedical Engineering', 'Chemical Engineering', 'Civil Engineering', 'Computer Engineering', 'Electrical Engineering', 'Environmental Engineering', 'Industrial Engineering', 'Materials Engineering', 'Mechanical Engineering', 'Nuclear Engineering', 'Petroleum Engineering', 'Software Engineering', 'Systems Engineering'];
+                    engineeringPrograms.forEach(function(program) {
+                        var option = document.createElement('option');
+                        option.text = program;
+                        option.value = program;
+                        programSelect.appendChild(option);
+                    });
+                } else if (selectedDepartment === 'Medical') {
+                    var medicalPrograms = ['Medicine', 'Nursing', 'Pharmacy', 'Dentistry', 'Medical Laboratory Science', 'Physiotherapy', 'Public Health', 'Radiography', 'Optometry', 'Biomedical Science', 'Anesthesiology', 'Pediatrics', 'Dermatology', 'Psychiatry'];
+                    medicalPrograms.forEach(function(program) {
+                        var option = document.createElement('option');
+                        option.text = program;
+                        option.value = program;
+                        programSelect.appendChild(option);
+                    });
+                } else if (selectedDepartment === 'Management') {
+                    var managementPrograms = ['Business Administration', 'Marketing', 'Human Resource Management', 'Finance', 'Accounting', 'Supply Chain Management', 'International Business', 'Entrepreneurship', 'Project Management', 'Operations Management', 'Hospitality Management', 'Public Administration', 'Real Estate Management', 'Tourism Management', 'Event Management'];
+                    managementPrograms.forEach(function(program) {
+                        var option = document.createElement('option');
+                        option.text = program;
+                        option.value = program;
+                        programSelect.appendChild(option);
+                    });
+                }
+
+                // Show the responsibility selection and submit button once a department is selected
+                document.getElementById('responsibilitySelection').style.display = 'block';                
+                document.getElementById('allottarget').style.display = 'block';
+                document.getElementById('submitButton').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Assign Documents | VibhuARMS</title>
+    
+    <!-- External CSS for datatables -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    
+    <!-- Updated static file paths using Flask’s url_for function -->
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+    
+    <!-- External JS libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Navbar included via Flask template -->
+    {% include 'attributer/navbar.html' %}
+    <br><br>
+    <div class="container-fluid px-4">
+        <h3 class="mt-4">Upload Documents</h3>
+        <hr />
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <form action="{{ url_for('attributer_assign_metrics.submit_documents') }}" method="post" enctype="multipart/form-data">
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="metric_detail_id" id="metric_detail_id" type="text" placeholder="Metric Detail ID" value="{{ metric.id }}" hidden />
+                        <label for="metric_detail_id">Metric Details ID</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="attribute_no" id="attribute_no" type="text" placeholder="Attribute No" value="{{ metric.attribute_no }}" readonly />
+                                <label for="attribute_no">Attribute No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="metric_no" id="metric_no" type="text" placeholder="Metric No" value="{{ metric.metric_no }}" readonly />
+                                <label for="metric_no">Metric No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="weightage" id="weightage" type="text" placeholder="Weightage" value="{{ metric.weightage }}" readonly />
+                                <label for="weightage">Weightage</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="metric_description" id="metric_description" type="text" placeholder="Metric Description" value="{{ metric.metric_description }}" readonly />
+                        <label for="metric_description">Metric Description</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <input class="form-control" name="attribute_files[]" type="file" value="None" multiple/>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select class="form-control" id="attribute_status" name="attribute_status" required>
+                            <option value="" disabled selected>Select Status</option>
+                            <option value="Assigned">Assigned</option>
+                            <option value="Working">Working</option>
+                            <option value="Submitted">Submitted</option>
+                        </select>
+                        <label for="attribute_status">Attribute Status</label>
+                    </div>
+
+                    <center>
+                        <button id="submitButton" type="submit" class="btn btn-primary mt-3">Submit</button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <!-- Updated static file paths using Flask’s url_for function -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

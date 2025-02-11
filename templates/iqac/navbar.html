@@ -1,0 +1,130 @@
+<nav class="sb-topnav navbar navbar-expand nav-justified" style="background-image: url(https://images.pexels.com/photos/7232658/pexels-photo-7232658.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);">
+    <!-- Sidebar Toggle-->
+    <button class="btn ms-md-4 me-lg-4" id="sidebarToggle" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- Navbar Brand-->
+    <h5 class="navbar mx-auto">VibhuARMS</h5>
+
+    <!-- Navbar Links -->
+    <ul class="navbar-nav ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user fa-fw"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="{{ url_for('iqac.logout') }}">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<!-- Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel" style="background-image: url(https://images.pexels.com/photos/7232658/pexels-photo-7232658.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);">
+    <div class="sb-sidenav accordion" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="sidebarLabel">Welcome</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <!-- Logo -->
+                <center>
+                    <img src="{{ url_for('static', filename='assets/img/vibhu-1.png') }}" alt="product" class="img-responsive" height="100px" width="100px">
+                    <br><br>
+                </center>
+                <!-- Dashboard Link -->
+                <a class="nav-link" href="{{ url_for('iqac.iqac_dashboard') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-sign-in-alt"></i></div>
+                    Dashboard
+                </a>
+                
+                <!-- Allot Dropdown -->
+                <div class="nav-item">
+                    <a class="nav-link toggle" href="#" id="allotDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#allotCollapse" aria-expanded="false" aria-controls="allotCollapse">
+                        <div class="sb-nav-link-icon"><i class="fa fa-user"></i></div>
+                        Allot
+                    </a>
+                    <div class="collapse" id="allotCollapse" style="margin-left:10%">
+                        <ul class="nav flex-column">
+                            <li><a class="nav-link" href="{{ url_for('allot_attributer.allot_attributer') }}">
+                                <div class="sb-nav-link-icon"><i class="fa fa-user"></i></div>
+                                Allot Attributer
+                            </a></li>
+                            <li><a class="nav-link" href="{{ url_for('allot_metrics.allot_metrics') }}">
+                                <div class="sb-nav-link-icon"><i class="fa fa-table"></i></div>
+                                Allot Metric
+                            </a></li>
+                            <li><a class="nav-link" href="{{ url_for('allot_attributer.view_alloted_attribute') }}">
+                                <div class="sb-nav-link-icon"><i class="fa fa-user"></i></div>
+                                Alloted Attributer Details
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Monitor Dropdown -->
+                <div class="nav-item">
+                    <a class="nav-link toggle" href="#" id="monitorDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#monitorCollapse" aria-expanded="false" aria-controls="monitorCollapse">
+                        <div class="sb-nav-link-icon"><i class="fas fa-eye"></i></div>
+                        Monitor
+                    </a>
+                    <div class="collapse" id="monitorCollapse" style="margin-left:10%">
+                        <ul class="nav flex-column">
+                            <li><a class="nav-link" href="{{ url_for('iqac_monitor_metrics.iqac_monitor_metrics') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-eye"></i></div>
+                                Monitor Metrics
+                            </a></li>
+                            <li><a class="nav-link" href="{{ url_for('iqac_monitor_attribute.iqac_monitor_attribute') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-eye"></i></div>
+                                Monitor Attribute
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Import Dropdown -->
+                <div class="nav-item">
+                    <a class="nav-link toggle" href="#" id="importDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#importCollapse" aria-expanded="false" aria-controls="importCollapse">
+                        <div class="sb-nav-link-icon"><i class="fas fa-upload"></i></div>
+                        Import
+                    </a>
+                    <div class="collapse" id="importCollapse" style="margin-left:10%">
+                        <ul class="nav flex-column">
+                            <li><a class="nav-link" href="{{ url_for('import_attributer.import_attributer') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-upload"></i></div>
+                                Import Attributer
+                            </a></li>
+                            <li><a class="nav-link" href="{{ url_for('import_employee.import_employee') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-upload"></i></div>
+                                Import Employee
+                            </a></li>
+                            <li><a class="nav-link" href="{{ url_for('import_metric.import_metric') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-upload"></i></div>
+                                Import Metric
+                            </a></li>
+                            <li><a class="nav-link" href="{{ url_for('import_provision.import_provision') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-upload"></i></div>
+                                Import Provision
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Change Password Link -->
+                <a class="nav-link" href="{{ url_for('iqac_change_password.iqac_change_password') }}">
+                    <div class="sb-nav-link-icon"><i class="fa fa-key"></i></div>
+                    Change Password
+                </a>
+
+                <!-- Signout Link -->
+                <a class="nav-link" href="{{ url_for('iqac.logout') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
+                    Signout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

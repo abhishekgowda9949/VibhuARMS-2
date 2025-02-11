@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Monitor Metrics | VibhuARMS</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    
+    <!-- Updated static file paths using Flask's url_for function -->
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+    
+    <!-- External JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+    {% include 'attributer/navbar.html' %}<br><br>
+    <div class="container-fluid px-4">
+        <h3 class="mt-4">Monitor Metrics</h3>
+        <hr />
+        <center>
+        <!-- Navigation Buttons -->
+        <div class="mb-3 text-center overflow-auto" style="white-space: nowrap;">
+            {% for metric in assigned_metrics %}
+                <button class="btn btn-primary btn-sm metric-btn d-inline-block" data-metric="metric{{ loop.index }}">Metric {{ metric.metric_no }}
+                </button>
+            {% endfor %}
+        </div>
+        
+        <div class="row justify-content-center">
+            {% for metric in assigned_metrics %}
+            <div class="metric-section table-responsive" id="metric{{ loop.index }}" style="display: none;">
+                <table class="table table-bordered text-center">
+                    <tbody>
+                        <tr><th>Attribute No</th><td>{{ metric.attribute_no }}</td></tr>
+                        <tr><th>Metric No</th><td>{{ metric.metric_no }}</td></tr>
+                        <tr><th>Metric Description</th><td>{{ metric.metric_description }}</td></tr>
+                        <tr>
+                            <td colspan="2">
+                                <table class="table table-bordered text-center" >
+                                    <tr>
+                                        <th>Calendar Type</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Weightage</th>
+                                        <th>Department</th>
+                                        <th>Program</th>
+                                        <th>Employee ID</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ metric.calendar_type }}</td>
+                                        <td>{{ metric.start_date }}</td>
+                                        <td>{{ metric.end_date }}</td>
+                                        <td>{{ metric.weightage }}</td>
+                                        <td>{{ metric.department }}</td>
+                                        <td>{{ metric.program }}</td>
+                                        <td>{{ metric.employee_id }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table class="table table-bordered text-center">
+                                    <tr>
+                                        <th>Targets Allotted</th>
+                                        <th>Targets Completed</th>
+                                        <th>Remarks</th>
+                                        <th>Edit Remarks</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ metric.alotted_target_no }}</td>
+                                        <td>{{ metric.completed_target_no }}</td>
+                                        <td>{{ metric.metric_remarks }}</td>
+                                        <td><a href="{{ url_for('attributer_metrics_remarks.fetch_metric_details_remarks', metric_id=metric.id) }}"><i class="fas fa-edit" style="color: #4DFF00;"></i></a></td>
+                                        <td>{{ metric.metric_status }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Files Uploaded</th>
+                            <td>
+                                {% if metric.metric_pdf == none %}
+                                    Not Uploaded
+                                {% else %}
+                                    <table class="table table-bordered">
+                                        <tr>
+                                          <th>Date</th>
+                                          <th>Time</th>
+                                          <th>File Name</th>
+                                          <th>Action</th>
+                                        </tr>
+                                        {% for pdf_file in metric.metric_pdf.split(',') %}
+                                        {% set parts = pdf_file.strip().split('_') %}
+                                        <tr>
+                                            <td>{{ parts[0] }}</td>
+                                            <td>{{ parts[1] }}</td>
+                                            <td>{{ '_'.join(parts[4:]) }}</td>
+                                            <td>
+                                                <!-- View button -->
+                                                <a href="{{ url_for('attributer_monitor_metrics.monitor_metric_view', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-eye" style="color: blue"></i></a>&nbsp;
+                                                <!-- Download link -->
+                                                <a href="{{ url_for('attributer_monitor_metrics.monitor_metric_download', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-download" style="color: #4DFF00;"></i></a>&nbsp;
+                                                <!-- Delete link -->
+                                                <a href="{{ url_for('attributer_monitor_metrics.monitor_metric_delete', file_id=metric.id, filename=pdf_file) }}" onclick="return confirmDelete()"><i class="fas fa-trash-alt" style="color: red;"></i></a>                                            
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+        </center>
+    </div>
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this file?");
+        }
+        
+        $(document).ready(function() {
+            $('.metric-btn').click(function() {
+                var metricId = $(this).data('metric');
+                $('.metric-section').hide();
+                $('#' + metricId).show();
+            });
+            $('.metric-btn:first').click();
+        });
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <!-- Static JS file reference using Flask's url_for -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

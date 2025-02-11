@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard | VibhuARMS</title>
+
+    <!-- External CSS for datatables -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    
+    <!-- Updated static file paths using Flask’s url_for function -->
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+
+    <style>
+        .table-container {
+            overflow-x: auto;
+            width: 100%; /* Ensure the container takes full width */
+            max-width: 100%; /* Prevent stretching beyond the viewport */
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    {% include 'attributer/navbar.html' %}
+    <br><br>
+
+    <div class="container-fluid px-4">
+        <!-- Check if the user is logged in and display a welcome message -->
+        {% if session['username'] %}
+            <h3 class="mt-4">Welcome, {{ session['username'] }}!</h3>
+        {% endif %}
+        <hr />
+
+        <!-- Breadcrumb for navigation -->
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>  
+
+        <!-- Latest news/updates section -->
+        <div class="alert" style="background-image: url(https://images.unsplash.com/photo-1555181937-efe4e074a301?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);">
+            <strong> Latest News / Updates</strong><br><br>
+            {% if message %}
+                {{ message }}
+            {% else %}
+                No new updates at the moment.
+            {% endif %}
+        </div>
+
+        <div class="alert" style="background-image: url(https://images.unsplash.com/photo-1555181937-efe4e074a301?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);">
+            <center>
+              <h3><strong>Current Progress Status</strong></h3>
+              <h4><strong>Total Number of Metrics: {{ session['data'].total_metrics_count }} Metrics</strong></h4>
+            </center>
+          <div class="row">
+        <style>
+        .card-custom {
+          border: none;
+          border-radius: 15px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .progress-bar-custom {
+          background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+        .progress-bar-custom-assigned {
+          background: linear-gradient(90deg, #ffc107, #ffeb3b);
+        }
+        .progress-bar-custom-working {
+          background: linear-gradient(90deg, #2196f3, #64b5f6);
+        }
+        .card-icon {
+          font-size: 2.8rem;
+          color: white;
+          padding: 20px;
+          border-radius: 50%;
+        }
+        .bg-complete {
+          background-color: #4caf50;
+        }
+        .bg-assigned {
+          background-color: #ffc107;
+        }
+        .bg-working {
+          background-color: #2196f3;
+        }
+        </style>
+          <!-- Assigned Card -->
+          <div class="col-md-4 mb-4">
+            <div class="card card-custom">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon bg-assigned me-3">
+                    <i class="fas fa-tasks"></i>
+                  </div>
+                  <div>
+                    <h5 class="card-title">Assigned</h5>
+                    <p class="card-text fs-5 fw-bold">Percentage: {{ session['data'].assigned }}%</p>
+                    <p class="card-text fs-5 fw-bold">Assigned Metrics: {{ session['data'].metric_Assigned_count }}</p>
+                  </div>
+                </div>
+                <div class="progress mt-3" style="height: 12px;">
+                  <div class="progress-bar progress-bar-custom-assigned" role="progressbar" style="width: {{ session['data'].assigned }}%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Working Card -->
+          <div class="col-md-4 mb-4">
+            <div class="card card-custom">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon bg-working me-3">
+                    <i class="fas fa-tools"></i>
+                  </div>
+                  <div>
+                    <h5 class="card-title">Working</h5>
+                    <p class="card-text fs-5 fw-bold">Percentage: {{ session['data'].working }}%</p>
+                    <p class="card-text fs-5 fw-bold">Working Metrics: {{ session['data'].metric_Working_count }} </p>
+                  </div>
+                </div>
+                <div class="progress mt-3" style="height: 12px;">
+                  <div class="progress-bar progress-bar-custom-working" role="progressbar" style="width: {{ session['data'].working }}%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Complete Card -->
+          <div class="col-md-4 mb-4">
+            <div class="card card-custom">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon bg-complete me-3">
+                    <i class="fas fa-trophy"></i>
+                  </div>
+                  <div>
+                    <h5 class="card-title">Complete</h5>
+                    <p class="card-text fs-5 fw-bold">Percentage: {{ session['data'].complete }}%</p>
+                    <p class="card-text fs-5 fw-bold">Completed Metrics: {{ session['data'].metric_Submited_count }}</p>
+                  </div>
+                </div>
+                <div class="progress mt-3" style="height: 12px;">
+                  <div class="progress-bar progress-bar-custom" role="progressbar" style="width: {{ session['data'].complete }}%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+    <br><br>
+
+    <!-- External and static scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='assets/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/demo/chart-bar-demo.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
+</body>
+</html>

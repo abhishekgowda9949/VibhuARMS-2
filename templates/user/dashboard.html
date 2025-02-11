@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard | VibhuARMS</title>
+    
+    <!-- External CSS Files -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" /> <!-- Changed to use url_for -->
+
+    <!-- FontAwesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Include Navbar -->
+    {% include 'user/navbar.html' %}
+    
+    <br><br>
+    <div class="container-fluid px-4">
+        {% if session['username'] %}
+            <h3 class="mt-4">Welcome {{ session['username'] }}</h3>
+        {% endif %}
+        <hr />
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol> 
+
+        <div class="alert" style="background-image: url(https://images.pexels.com/photos/1101122/pexels-photo-1101122.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);">
+            <strong> Latest News / Updates</strong><br><br>
+            {% if messages %}
+                {{ messages }}
+            {% endif %}
+            <br><br>
+            {% if targets %}
+                <table class="table table-bordered" style="background-color: aliceblue;">
+                    <tbody>
+                        <tr>
+                            <th>Calendar Type</th>
+                            <td>{{ targets.calendartype }}</td>
+                        </tr>
+                        <tr>
+                            <th>Department</th>
+                            <td>{{ targets.department }}</td>
+                        </tr>
+                        <tr>
+                            <th>Program</th>
+                            <td>{{ targets.program }}</td>
+                        </tr>
+                        <tr>
+                            <th>Parameter ID</th>
+                            <td>{{ targets.parameter_id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Parameter Name</th>
+                            <td>{{ targets.parameter_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Parameter Description</th>
+                            <td>{{ targets.parameter_description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Responsibility</th>
+                            <td>{{ targets.responsibility }}</td>
+                        </tr>
+                        <tr>
+                            <th>Target Type</th>
+                            <td>{{ targets.target_type }}</td>
+                        </tr>
+                        <tr>
+                            <th>Target Details</th>
+                            {% if targets.target_details == none %}
+                                <td><center>Not Assigned</center></td>
+                            {% elif targets.target_type == 'monthly' %}
+                            <td>
+                                <table class="table table-bordered" style="background-color: aliceblue;">
+                                    <thead>
+                                        <tr>
+                                            <th><center>Month</center></th>
+                                            <th><center>Assigned Targets</center></th>
+                                            <th><center>Completed Targets</center></th>
+                                        </tr>
+                                        {% for month, value in targets.target_details.items() %}
+                                            <tr>
+                                                <td style="width: 30%;">{{ month }}</td>
+                                                <td style="width: 30%;"><center>{{ targets.target_details[month] }}</center></td>
+                                                <td style="width: 30%;"><center>{{ targets.completed_target_details[month] }}</center></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </thead>
+                                </table>                            
+                            </td>
+                            {% else %}
+                            <td>
+                                <table class="table table-bordered" style="background-color: aliceblue;">
+                                    <thead>
+                                        <tr>
+                                            <th><center>Starting Month</center></th>
+                                            <th><center>Ending Month</center></th>
+                                            <th><center>Assigned Targets</center></th>
+                                            <th><center>Completed Targets</center></th>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 25%;">{{ targets.startingmonth }}</td>
+                                            <td style="width: 25%;">{{ targets.endingmonth }}</td>
+                                            <td style="width: 25%;"><center>{{ targets.target_details }}</center></td>
+                                            <td style="width: 25%;"><center>{{ targets.completed_target_details }}</center></td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th>Target Status</th>
+                            <td>{{ targets.target_status }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div><br>
+    </div>
+    
+    <!-- External JS Files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script> <!-- Changed to use url_for -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='assets/demo/chart-area-demo.js') }}"></script> <!-- Changed to use url_for -->
+    <script src="{{ url_for('static', filename='assets/demo/chart-bar-demo.js') }}"></script> <!-- Changed to use url_for -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script> <!-- Changed to use url_for -->
+</body>
+</html>
