@@ -159,7 +159,91 @@
         });;
     });
 </script>
+<script>
+    $(document).ready(function () {
+        $('.metric-btn').click(function () {
+            $('.metric-section').hide();
+            var metricId = $(this).data('metric');
+            $('#' + metricId).show();
 
+            // Show download buttons when a metric is selected
+            $('#downloadButtons').show();
+        });
+    });
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        let visibleMetric = document.querySelector('.metric-section:not([style*="display: none"])');
+        if (!visibleMetric) {
+            alert("No metric selected!");
+            return;
+        }
+
+        let yOffset = 15;
+
+        // **Extracting Data as Two-Column Table**
+        visibleMetric.querySelectorAll("table").forEach((table, index) => {
+            let rows = [];
+
+            table.querySelectorAll("tr").forEach((tr, i) => {
+                let cells = tr.querySelectorAll("th, td");
+
+                // **Skipping 4th and 7th rows**
+                if (i === 3 || i === 6) {
+                    return; // Skips the row
+                }
+
+                if (cells.length >= 2) {
+                    let headerText = cells[0].innerText.trim();
+                    let dataText = cells[1].innerText.trim();
+
+                    rows.push([headerText, dataText]);
+                }
+            });
+
+            // **Adding Table to PDF**
+            doc.autoTable({
+                head: [["Field", "Value"]], // Set the column headers
+                body: rows,
+                startY: yOffset,
+                theme: 'grid',
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 3,
+                    valign: 'middle',
+                    halign: 'center'
+                },
+                columnStyles: {
+                    0: { cellWidth: 60, halign: 'left', fontStyle: 'bold' },  // Header column
+                    1: { cellWidth: 'auto', halign: 'center' }  // Data column
+                },
+                margin: { top: 15 }
+            });
+
+            yOffset = doc.autoTable.previous.finalY + 10;
+            if (index !== visibleMetric.querySelectorAll("table").length - 1) {
+                doc.addPage();
+            }
+        });
+
+        doc.save("metrics_data.pdf");
+    }
+</script>
+
+<!-- Download Buttons (Hidden Until Metric is Selected) -->
+<div id="downloadButtons" style="display: none; text-align: center; margin-top: 10px;">
+    <button class="btn btn-danger" onclick="downloadPDF()">Download PDF</button>
+</div>
+
+<!-- Ensure jsPDF and autoTable Libraries are Included -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.30/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
