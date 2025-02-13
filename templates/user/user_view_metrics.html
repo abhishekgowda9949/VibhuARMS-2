@@ -187,7 +187,12 @@
 
         let yOffset = 15;
 
-        // **Extracting Data as Two-Column Table**
+        // **Adding a custom header**
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Metric Details Report", 105, yOffset, { align: "center" });
+        yOffset += 10;
+
         visibleMetric.querySelectorAll("table").forEach((table, index) => {
             let rows = [];
 
@@ -203,7 +208,18 @@
                     let headerText = cells[0].innerText.trim();
                     let dataText = cells[1].innerText.trim();
 
-                    rows.push([headerText, dataText]);
+                    let rowStyle = { fontStyle: "normal" }; // Default style
+
+                    // **Make 5th & 7th row fully bold**
+                    if (i === 4 || i === 7 || i === 10) {
+                        rowStyle.fontStyle = "bold";
+                    }
+                    // **Remove bold for 6th & 8th row**
+                    if (i === 5) {
+                        rowStyle.fontStyle = "normal";
+                    }
+
+                    rows.push([{ content: headerText, styles: rowStyle }, { content: dataText, styles: rowStyle }]);
                 }
             });
 
@@ -220,7 +236,7 @@
                     halign: 'center'
                 },
                 columnStyles: {
-                    0: { cellWidth: 60, halign: 'left', fontStyle: 'bold' },  // Header column
+                    0: { cellWidth: 60, halign: 'left' },  // Header column
                     1: { cellWidth: 'auto', halign: 'center' }  // Data column
                 },
                 margin: { top: 15 }
@@ -232,9 +248,10 @@
             }
         });
 
-        doc.save("metrics_data.pdf");
+        doc.save("metric_details_report.pdf");
     }
 </script>
+
 
 <!-- Download Buttons (Hidden Until Metric is Selected) -->
 <div id="downloadButtons" style="display: none; text-align: center; margin-top: 10px;">
