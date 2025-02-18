@@ -4,17 +4,15 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
     <title>View Metrics | VibhuARMS</title>
-    
-    <!-- CDN for Simple DataTables -->
+
+    <!-- Simple DataTables -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-    
-    <!-- Correcting the static file path for styles.css -->
+
+    <!-- Stylesheet -->
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
-    
-    <!-- Font Awesome and jQuery from CDN -->
+
+    <!-- Font Awesome and jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 </head>
@@ -24,17 +22,20 @@
     <div class="container-fluid px-4">
         <h3 class="mt-4">View Metrics</h3>
         <hr/> 
+
+        <!-- Metric Selection Buttons -->
         <center>
-                <!-- Navigation Buttons -->
-                <div class="mb-3 text-center overflow-auto" style="white-space: nowrap;">
-                    {% for metric in metrics %}
-                    <button class="btn btn-primary btn-sm metric-btn d-inline-block" data-metric="metric{{ loop.index }}">Metric {{ metric.metric_no }}</button>
+            <div class="mb-3 text-center overflow-auto" style="white-space: nowrap;">
+                {% for metric in metrics %}
+                    <button class="btn btn-primary btn-sm metric-btn" data-metric="metric{{ loop.index }}">
+                        Metric {{ metric.metric_no }}
+                    </button>
                 {% endfor %}
-                </div> 
+            </div> 
+        </center>
 
         <div class="row justify-content-center">           
-            <div class="row justify-content-center">
-                {% for metric in metrics %}
+            {% for metric in metrics %}
                 <div class="metric-section table-responsive" id="metric{{ loop.index }}" style="display: none;">
                     <table class="table table-bordered text-center">
                         <tbody>
@@ -43,7 +44,7 @@
                             <tr><th>Metric Description</th><td>{{ metric.metric_description }}</td></tr>
                             <tr>
                                 <td colspan="2">
-                                    <table class="table table-bordered text-center" >
+                                    <table class="table table-bordered text-center">
                                         <tr>
                                             <th>Calendar Type</th>
                                             <th>Start Date</th>
@@ -80,7 +81,12 @@
                                             <td>{{ metric.completed_target_no }}</td>
                                             <td>{{ metric.metric_status }}</td>
                                             <td>{{ metric.metric_remarks }}</td>
-                                            <td><button class="btn btn-primary userupdateDetails" data-metric-id="{{ metric.id }}">Edit</button><br><br></td>
+                                            <td>
+                                                <form method="POST" action="{{ url_for('user_view_metrics.user_update_details') }}">
+                                                    <input type="hidden" name="metric_id" value="{{ metric.id }}">
+                                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
@@ -105,8 +111,13 @@
                                                 <td>{{ parts[1] }}</td>
                                                 <td>{{ '_'.join(parts[2:]) }}</td>
                                                 <td>
-                                                    <a href="{{ url_for('user_view_metrics.metric_file_view', metricid=metric.id, filename=pdf_file) }}"><i class="fas fa-eye" style="color: blue"></i></a>&nbsp;
-                                                    <a href="{{ url_for('user_view_metrics.metric_file_download', metricid=metric.id, filename=pdf_file) }}"><i class="fas fa-download" style="color: #4DFF00;"></i></a>&nbsp;
+                                                    <a href="{{ url_for('user_view_metrics.metric_file_view', metricid=metric.id, filename=pdf_file) }}">
+                                                        <i class="fas fa-eye" style="color: blue"></i>
+                                                    </a>
+                                                    &nbsp;
+                                                    <a href="{{ url_for('user_view_metrics.metric_file_download', metricid=metric.id, filename=pdf_file) }}">
+                                                        <i class="fas fa-download" style="color: #4DFF00;"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -118,154 +129,61 @@
                     </table>
                 </div>
             {% endfor %}
-            </div>
-        </center>
         </div>
     </div>
 
-<script>
-    $(document).ready(function() {
-        $('.metric-btn').click(function() {
-            $('.metric-section').hide();
-            var metricId = $(this).data('metric');
-            $('#' + metricId).show();
-        });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dataTable = new simpleDatatables.DataTable('.table-container table', {
-            searchable: false,
-            sortable: false,
-            paging: false
-        });
-
-        document.querySelectorAll('.userupdateDetails').forEach(button => {
-            button.addEventListener('click', function() {
-                const metricId = this.getAttribute('data-metric-id');
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{{ url_for('user_view_metrics.user_update_details') }}" ;   
-                
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'metric_id';
-                input.value = metricId;
-                form.appendChild(input);
-                
-                document.body.appendChild(form);
-                form.submit();
+    <!-- jQuery for Metric Selection -->
+    <script>
+        $(document).ready(function() {
+            $('.metric-btn').click(function() {
+                $('.metric-section').hide();
+                var metricId = $(this).data('metric');
+                $('#' + metricId).show();
             });
-        });;
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('.metric-btn').click(function () {
-            $('.metric-section').hide();
-            var metricId = $(this).data('metric');
-            $('#' + metricId).show();
-
-            // Show download buttons when a metric is selected
-            $('#downloadButtons').show();
         });
-    });
+    </script>
 
-    function downloadPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-        });
+    <!-- PDF Download -->
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-        let visibleMetric = document.querySelector('.metric-section:not([style*="display: none"])');
-        if (!visibleMetric) {
-            alert("No metric selected!");
-            return;
-        }
-
-        let yOffset = 15;
-
-        // **Adding a custom header**
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text("Metric Details Report", 105, yOffset, { align: "center" });
-        yOffset += 10;
-
-        visibleMetric.querySelectorAll("table").forEach((table, index) => {
-            let rows = [];
-
-            table.querySelectorAll("tr").forEach((tr, i) => {
-                let cells = tr.querySelectorAll("th, td");
-
-                // **Skipping 4th and 7th rows**
-                if (i === 3 || i === 6) {
-                    return; // Skips the row
-                }
-
-                if (cells.length >= 2) {
-                    let headerText = cells[0].innerText.trim();
-                    let dataText = cells[1].innerText.trim();
-
-                    let rowStyle = { fontStyle: "normal" }; // Default style
-
-                    // **Make 5th & 7th row fully bold**
-                    if (i === 4 || i === 7 || i === 10) {
-                        rowStyle.fontStyle = "bold";
-                    }
-                    // **Remove bold for 6th & 8th row**
-                    if (i === 5) {
-                        rowStyle.fontStyle = "normal";
-                    }
-
-                    rows.push([{ content: headerText, styles: rowStyle }, { content: dataText, styles: rowStyle }]);
-                }
-            });
-
-            // **Adding Table to PDF**
-            doc.autoTable({
-                body: rows,
-                startY: yOffset,
-                theme: 'grid',
-                styles: {
-                    fontSize: 10,
-                    cellPadding: 3,
-                    valign: 'middle',
-                    halign: 'center'
-                },
-                columnStyles: {
-                    0: { cellWidth: 60, halign: 'left' },  // Header column
-                    1: { cellWidth: 'auto', halign: 'center' }  // Data column
-                },
-                margin: { top: 15 }
-            });
-
-            yOffset = doc.autoTable.previous.finalY + 10;
-            if (index !== visibleMetric.querySelectorAll("table").length - 1) {
-                doc.addPage();
+            let visibleMetric = document.querySelector('.metric-section:not([style*="display: none"])');
+            if (!visibleMetric) {
+                alert("No metric selected!");
+                return;
             }
-        });
 
-        doc.save("metric_details_report.pdf");
-    }
-</script>
+            let yOffset = 10;
+            doc.text("Metric Details Report", 105, yOffset, { align: "center" });
+            yOffset += 10;
 
+            visibleMetric.querySelectorAll("table").forEach(table => {
+                let rows = [];
+                table.querySelectorAll("tr").forEach(tr => {
+                    let cells = tr.querySelectorAll("th, td");
+                    if (cells.length >= 2) {
+                        rows.push([cells[0].innerText, cells[1].innerText]);
+                    }
+                });
 
-<!-- Download Buttons (Hidden Until Metric is Selected) -->
-<div id="downloadButtons" style="display: none; text-align: center; margin-top: 10px;">
-    <button class="btn btn-danger" onclick="downloadPDF()">Download PDF</button>
-</div>
+                doc.autoTable({ body: rows, startY: yOffset });
+                yOffset = doc.autoTable.previous.finalY + 10;
+            });
 
-<!-- Ensure jsPDF and autoTable Libraries are Included -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.30/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='assets/demo/chart-area-demo.js') }}"></script>
-<script src="{{ url_for('static', filename='assets/demo/chart-bar-demo.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
+            doc.save("metric_details_report.pdf");
+        }
+    </script>
+
+    <!-- Download Button -->
+    <div id="downloadButtons" style="text-align: center; margin-top: 10px;">
+        <button class="btn btn-danger" onclick="downloadPDF()">Download PDF</button>
+    </div><br>
+
+    <!-- Required JS Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.30/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

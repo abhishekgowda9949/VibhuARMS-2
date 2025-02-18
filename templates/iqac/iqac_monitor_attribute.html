@@ -6,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Monitor Attribute | VibhuARMS</title>
     
-    <!-- External CSS -->
+    <!-- External CSS from CDN -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+    
+    <!-- Static CSS file -->
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
     
-    <!-- Font Awesome -->
+    <!-- Font Awesome from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    
+    <!-- jQuery from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
     
     <style>
         .table-container {
@@ -28,21 +32,9 @@
     {% include 'iqac/navbar.html' %}
     <div class="container-fluid px-4"><br><br>
         <h3 class="mt-4">Monitor Attribute</h3><hr />
-
-        <!-- Search Input -->
-        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search in table..." style="width: min-content;">
-
-        <!-- Buttons for Exporting Table Data -->
-        <center>
-            <div class="mb-3">
-                <button class="btn btn-success" onclick="downloadCSV()">Download CSV</button>
-                <button class="btn btn-danger" onclick="downloadPDF()">Download PDF</button>
-            </div>
-        </center>
-
         <div class="row justify-content-center">
             <div class="table-container">
-                <table id="monitorTable" class="table table-bordered" style="white-space: nowrap; text-overflow: ellipsis;">
+                <table class="table table-bordered" style="white-space: nowrap; text-overflow: ellipsis;" >
                     <thead>
                         <tr>
                             <th>Attribute No</th>
@@ -62,7 +54,36 @@
                                 <td style="white-space: normal; overflow-wrap: break-word;">{{ metric.metric_description }}</td>
                                 <td style="white-space: normal; overflow-wrap: break-word;">{{ metric.documents_required }}</td>
                                 <td>{{ metric.weightage }}</td>
-                                <td>{{ metric.attribute_pdf or 'Not Uploaded' }}</td>
+                                {% if metric.attribute_pdf == none %}
+                                    <td><center>Not Uploaded</center></td>
+                                {% else %}
+                                <td>
+                                    <table class="table table-bordered" style="width: auto;">
+                                        <tr>
+                                          <th>Date</th>
+                                          <th>Time</th>
+                                          <th>File Name</th>
+                                          <th>Action</th>
+                                        </tr>
+                                        {% for pdf_file in metric.attribute_pdf.split(',') %}
+                                        {% set parts = pdf_file.strip().split('_') %}
+                                        <tr>
+                                            <td>{{ parts[0] }}</td>
+                                            <td>{{ parts[1] }}</td>
+                                            <td>{{ '_'.join(parts[2:]) }}</td>
+                                            <td>
+                                                <!-- View button -->
+                                                <a href="{{ url_for('iqac_monitor_attribute.iqac_monitor_attribute_view', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-eye" style="color: blue"></i></a>&nbsp;
+                                                <!-- Download link -->
+                                                <a href="{{ url_for('iqac_monitor_attribute.iqac_monitor_attribute_download', file_id=metric.id, filename=pdf_file) }}"><i class="fas fa-download" style="color: #4DFF00;"></i></a>&nbsp;
+                                                <!-- Delete link -->
+                                                <a href="{{ url_for('iqac_monitor_attribute.iqac_monitor_attribute_delete', file_id=metric.id, filename=pdf_file) }}" onclick="return confirmDelete()"><i class="fas fa-trash-alt" style="color: red;"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </td>
+                                {% endif %}
                                 <td>{{ metric.attribute_status }}</td>
                             </tr>
                         {% endfor %}
@@ -71,73 +92,23 @@
             </div>
         </div>
     </div>
-    
     <script>
         $(document).ready(function () {
-            var table = $('#monitorTable').DataTable({
-                dom: 'lrtip', // Hide default search box
-                paging: true,
-                ordering: true,
-                info: true
-            });
-
-            // Custom search functionality
-            $('#searchInput').on('keyup', function () {
-                table.search(this.value).draw();
-            });
+          $('#example').DataTable();
         });
-
-        // Download filtered data as CSV
-        function downloadCSV() {
-            var table = $('#monitorTable').DataTable();
-            var rows = [];
-            table.rows({ search: "applied" }).every(function () {
-                rows.push(this.data());
-            });
-            var csvData = Papa.unparse(rows);
-            var blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-            var link = document.createElement("a");
-            link.setAttribute("href", URL.createObjectURL(blob));
-            link.setAttribute("download", "Monitor_Attribute.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Download filtered data as PDF
-        function downloadPDF() {
-            var { jsPDF } = window.jspdf;
-            var doc = new jsPDF();
-            doc.text("Monitor Attribute Table", 14, 10);
-            var table = $('#monitorTable').DataTable();
-            var data = [];
-            table.rows({ search: "applied" }).every(function () {
-                data.push(this.data());
-            });
-            doc.autoTable({
-                head: [['Attribute No', 'Metric No', 'Metric Description', 'Documents Required', 'Weightage', 'Files Uploaded', 'Status']],
-                body: data,
-                startY: 20,
-                theme: "grid",
-                styles: { fontSize: 10 }
-            });
-            doc.save("Monitor_Attribute.pdf");
+      </script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this file?");
         }
     </script>
-
-    <!-- External Libraries -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <!-- Use url_for to link static JS files -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='assets/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/demo/chart-bar-demo.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
+    
+    <!-- External JS from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <!-- Static JS files -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
